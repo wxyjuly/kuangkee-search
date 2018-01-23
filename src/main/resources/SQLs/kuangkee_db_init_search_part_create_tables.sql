@@ -71,12 +71,18 @@ create table tb_article
 		comment '品牌id',
    brand_name           varchar(32)                    not null
 		comment '品牌名称（冗余字段）',
+   error_code                varchar(256)              null
+		comment '挖掘机错误编码',		
    title                varchar(256)                   null
 		comment '文章标题',
    sub_title            varchar(512)                   null
 		comment '子标题',
-   url                  varchar(512)                   null
-		comment '文章图片缩略图URL',
+   img_search_small     varchar(512)                   null
+		comment '文章搜索图片缩略图URL',
+   img_content_big              varchar(512)                   null
+		comment '文章图片正文大图',	
+   img_content_small            varchar(512)                   null
+		comment '文章图片正文小图',		
    source_url           varchar(512)                   null
 		comment '文章来源',
    content              text                           null

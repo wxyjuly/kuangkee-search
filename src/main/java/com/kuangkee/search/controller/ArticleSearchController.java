@@ -8,43 +8,43 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kuangkee.search.pojo.SearchResult;
-import com.kuangkee.search.service.SearchService;
-import com.taotao.common.pojo.TaotaoResult;
+import com.kuangkee.common.pojo.KuangkeeResult;
+import com.kuangkee.search.pojo.util.SearchResult;
+import com.kuangkee.search.pojo.vo.ArticleVO;
+import com.kuangkee.search.service.IArticleSearchService;
 import com.taotao.common.utils.ExceptionUtil;
 
 /**
- * 商品查询Controller
+ * 文章查询Controller
  * ClassName: SearchController <br/>
  * date: 2018年1月20日 下午12:23:51 <br/>
  * @author Leon Xi
  * @version v1.0
  */
 @Controller
-public class SearchController {
+public class ArticleSearchController {
 
 	@Autowired
-	private SearchService searchService;
+	private IArticleSearchService articleSearchService;
 	
 	@RequestMapping(value="/query", method=RequestMethod.GET)
 	@ResponseBody
-	public TaotaoResult search(@RequestParam("q")String queryString, 
+	public KuangkeeResult search(@RequestParam("q")String qryStr, 
 			@RequestParam(defaultValue="1")Integer page, 
-			@RequestParam(defaultValue="60")Integer rows) {
+			@RequestParam(defaultValue="10")Integer rows) {
 		//查询条件不能为空
-		if (StringUtils.isBlank(queryString)) {
-			return TaotaoResult.build(400, "查询条件不能为空");
+		if (StringUtils.isBlank(qryStr)) {
+			return KuangkeeResult.build(400, "查询条件不能为空");
 		}
-		SearchResult searchResult = null;
+		SearchResult<ArticleVO> searchResult = null;
 		try {
-			queryString = new String(queryString.getBytes("iso8859-1"), "utf-8");
-			searchResult = searchService.search(queryString, page, rows);
+			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
+			searchResult = articleSearchService.search(qryStr, page, rows);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return TaotaoResult.build(500, ExceptionUtil.getStackTrace(e));
+			return KuangkeeResult.build(500, ExceptionUtil.getStackTrace(e));
 		}
-		return TaotaoResult.ok(searchResult);
-		
+		return KuangkeeResult.ok(searchResult);
 	}
 	
 }

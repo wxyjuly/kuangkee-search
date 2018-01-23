@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.kuangkee.search.mapper.ItemMapper;
 import com.kuangkee.search.pojo.Item;
-import com.kuangkee.search.service.ItemService;
+import com.kuangkee.search.service.IItemService;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.ExceptionUtil;
 
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl implements IItemService {
 
 	@Autowired
 	private ItemMapper itemMapper;

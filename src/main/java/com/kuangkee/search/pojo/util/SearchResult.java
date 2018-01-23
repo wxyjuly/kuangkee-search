@@ -1,11 +1,12 @@
-package com.kuangkee.search.pojo;
+package com.kuangkee.search.pojo.util ;
 
 import java.util.List;
 
-public class SearchResult {
+@SuppressWarnings("hiding")
+public class SearchResult<T> {
 
 	//商品列表
-	private List<Item> itemList;
+	private List<T> result;
 	//总记录数
 	private long recordCount;
 	//总页数
@@ -13,11 +14,11 @@ public class SearchResult {
 	//当前页
 	private long curPage;
 	
-	public List<Item> getItemList() {
-		return itemList;
+	public List<T> getResult() {
+		return result;
 	}
-	public void setItemList(List<Item> itemList) {
-		this.itemList = itemList;
+	public void setResult(List<T> Result) {
+		this.result = Result;
 	}
 	public long getRecordCount() {
 		return recordCount;
@@ -37,5 +38,4 @@ public class SearchResult {
 	public void setCurPage(long curPage) {
 		this.curPage = curPage;
 	}
-	
 }

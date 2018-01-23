@@ -5,9 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kuangkee.search.service.ItemService;
+import com.kuangkee.search.service.IItemService;
 import com.taotao.common.pojo.TaotaoResult;
-
 
 /**
  * 索引库维护
@@ -16,13 +15,12 @@ import com.taotao.common.pojo.TaotaoResult;
  * @author Leon Xi
  * @version v1.0
  */
-
 @Controller
 @RequestMapping("/manager")
 public class ItemController {
 	
 	@Autowired
-	private ItemService itemService;
+	private IItemService itemService;
 
 	/**
 	 * 导入商品数据到索引库

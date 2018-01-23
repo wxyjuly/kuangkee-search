@@ -12,59 +12,65 @@ import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kuangkee.search.dao.SearchDao;
-import com.kuangkee.search.pojo.Item;
-import com.kuangkee.search.pojo.SearchResult;
+import com.kuangkee.search.dao.ArticleSearchDao;
+import com.kuangkee.search.pojo.util.SearchResult;
+import com.kuangkee.search.pojo.vo.ArticleVO;
 
 /**
- * 商品搜索Dao
+ * 文章搜索Dao
  * ClassName: SearchDaoImpl <br/>
  * date: 2018年1月20日 下午12:18:08 <br/>
  * @author Leon Xi
  * @version v1.0
  */
 @Repository
-public class SearchDaoImpl implements SearchDao {
+public class SearchDaoImpl implements ArticleSearchDao {
 	
 	@Autowired
 	private SolrServer solrServer;
 
 	@Override
-	public SearchResult search(SolrQuery query) throws Exception {
+	public SearchResult<ArticleVO> search(SolrQuery query) throws Exception {
 		//返回值对象
-		SearchResult result = new SearchResult();
+		SearchResult<ArticleVO> result = new SearchResult<>();
 		//根据查询条件查询索引库
 		QueryResponse queryResponse = solrServer.query(query);
 		//取查询结果
 		SolrDocumentList solrDocumentList = queryResponse.getResults();
 		//取查询结果总数量
 		result.setRecordCount(solrDocumentList.getNumFound());
-		//商品列表
-		List<Item> itemList = new ArrayList<>();
+		//文章列表
+		List<ArticleVO> articles = new ArrayList<>();
 		//取高亮显示
 		Map<String, Map<String, List<String>>> highlighting = queryResponse.getHighlighting();
-		//取商品列表
+		
+		//取文章列表
+		ArticleVO article ;
 		for (SolrDocument solrDocument : solrDocumentList) {
-			//创建一商品对象
-			Item item = new Item();
-			item.setId((String) solrDocument.get("id"));
+			//创建一文章对象
+			article = new ArticleVO() ;
+			article.setArticleId((Integer)solrDocument.get("id")) ;
 			//取高亮显示的结果
-			List<String> list = highlighting.get(solrDocument.get("id")).get("item_title");
+			List<String> list = highlighting.get(solrDocument.get("id")).get("title");
 			String title = "";
 			if (list != null && list.size()>0) {
 				title = list.get(0);
 			} else {
-				title = (String) solrDocument.get("item_title");
+				title = (String) solrDocument.get("title");
 			}
-			item.setTitle(title);
-			item.setImage((String) solrDocument.get("item_image"));
-			item.setPrice((long) solrDocument.get("item_price"));
-			item.setSell_point((String) solrDocument.get("item_sell_point"));
-			item.setCategory_name((String) solrDocument.get("item_category_name"));
-			//添加的商品列表
-			itemList.add(item);
+			article.setTitle(title);
+			article.setBrandId((String)solrDocument.get("brand_id"));
+			article.setBrandName((String)solrDocument.get("brand_name"));
+			article.setErrorCode((String)solrDocument.get("error_code"));
+			article.setImgSearchSmall((String)solrDocument.get("img_search_small"));
+			article.setImgContentSmall((String)solrDocument.get("img_content_small"));
+			article.setImgContentBig((String)solrDocument.get("img_content_big"));
+			article.setContent((String)solrDocument.get("content"));
+			
+			//添加的文章列表
+			articles.add(article);
 		}
-		result.setItemList(itemList);
+		result.setResult(articles);
 		return result;
 	}
 
