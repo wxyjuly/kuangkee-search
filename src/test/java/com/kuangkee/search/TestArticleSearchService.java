@@ -14,8 +14,8 @@ import com.kuangkee.search.service.IArticleSearchService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:spring/applicationContext-*.xml" })
-public class TestSearchService {
-	Logger log = LoggerFactory.getLogger(TestSearchService.class) ;
+public class TestArticleSearchService {
+	Logger log = LoggerFactory.getLogger(TestArticleSearchService.class) ;
 	
 	@Autowired
 	IArticleSearchService searchService ;

@@ -9,26 +9,26 @@ import com.kuangkee.common.pojo.KuangkeeResult;
 import com.kuangkee.search.service.solr.IArticleSolrService;
 
 /**
- * 索引库维护
- * ClassName: ItemController <br/>
- * date: 2018年1月6日 下午10:05:38 <br/>
+ * 文章查询服务
+ * ClassName: ArticleController <br/>
+ * date: 2018年1月23日 上午10:54:25 <br/>
  * @author Leon Xi
  * @version v1.0
  */
 @Controller
-@RequestMapping("/manager")
-public class ItemController {
+@RequestMapping("/article")
+public class ArticleSolrController {
 	
 	@Autowired
-	private IArticleSolrService itemService;
+	private IArticleSolrService articleSolrService;
 
 	/**
 	 * 导入商品数据到索引库
 	 */
-	@RequestMapping("/importall")
+	@RequestMapping("/manager/importall")
 	@ResponseBody
 	public KuangkeeResult importAllItems() {
-		KuangkeeResult result = itemService.importAllItems();
+		KuangkeeResult result = articleSolrService.importAllItems();
 		return result;
 	}
 }

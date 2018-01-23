@@ -1,4 +1,4 @@
-package com.kuangkee.search.service.impl;
+package com.kuangkee.search.service.solr.impl;
 
 import java.util.List;
 
@@ -7,14 +7,14 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kuangkee.common.pojo.KuangkeeResult;
 import com.kuangkee.search.mapper.ItemMapper;
 import com.kuangkee.search.pojo.Item;
-import com.kuangkee.search.service.IItemService;
-import com.taotao.common.pojo.TaotaoResult;
+import com.kuangkee.search.service.solr.IArticleSolrService;
 import com.taotao.common.utils.ExceptionUtil;
 
 @Service
-public class ItemServiceImpl implements IItemService {
+public class ArticleSolrServiceImpl implements IArticleSolrService {
 
 	@Autowired
 	private ItemMapper itemMapper;
@@ -23,7 +23,7 @@ public class ItemServiceImpl implements IItemService {
 	private SolrServer solrServer;
 	
 	@Override
-	public TaotaoResult importAllItems() {
+	public KuangkeeResult importAllItems() {
 		try {
 			
 			//查询商品列表
@@ -46,9 +46,9 @@ public class ItemServiceImpl implements IItemService {
 			solrServer.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return TaotaoResult.build(500, ExceptionUtil.getStackTrace(e));
+			return KuangkeeResult.build(500, ExceptionUtil.getStackTrace(e));
 		}
-		return TaotaoResult.ok();
+		return KuangkeeResult.ok();
 	}
 
 }
