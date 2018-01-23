@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kuangkee.common.pojo.KuangkeeResult;
+import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
+import com.kuangkee.common.utils.exception.ExceptionUtil;
 import com.kuangkee.search.pojo.util.SearchResult;
-import com.kuangkee.search.pojo.vo.ArticleVO;
-import com.kuangkee.search.service.IArticleSearchService;
-import com.taotao.common.utils.ExceptionUtil;
+import com.kuangkee.search.pojo.vo.Article;
+import com.kuangkee.search.service.solr.IArticleSearchService;
 
 /**
  * 文章查询Controller
@@ -27,6 +28,19 @@ public class ArticleSearchController {
 	@Autowired
 	private IArticleSearchService articleSearchService;
 	
+	/**
+	 * 
+	 * search:查询核心业务. <br/>
+	 * 查询规则：
+	 * 1. 优先按照错误代码(只包含字母和数字)进行匹配
+	 * 2. 错误代码无法匹配，再通过文章正文内容进行匹配
+	 * 若两者均无法匹配，给出一些提示
+	 * @author Leon Xi
+	 * @param qryStr
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
 	@RequestMapping(value="/query", method=RequestMethod.GET)
 	@ResponseBody
 	public KuangkeeResult search(@RequestParam("q")String qryStr, 
@@ -34,15 +48,15 @@ public class ArticleSearchController {
 			@RequestParam(defaultValue="10")Integer rows) {
 		//查询条件不能为空
 		if (StringUtils.isBlank(qryStr)) {
-			return KuangkeeResult.build(400, "查询条件不能为空");
+			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
 		}
-		SearchResult<ArticleVO> searchResult = null;
+		SearchResult<Article> searchResult = null;
 		try {
 			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
 			searchResult = articleSearchService.search(qryStr, page, rows);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return KuangkeeResult.build(500, ExceptionUtil.getStackTrace(e));
+			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
 		}
 		return KuangkeeResult.ok(searchResult);
 	}

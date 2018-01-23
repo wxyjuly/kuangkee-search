@@ -1,13 +1,13 @@
-package com.kuangkee.search.service.impl;
+package com.kuangkee.search.service.solr.impl;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kuangkee.search.dao.ArticleSearchDao;
+import com.kuangkee.search.dao.IArticleSolrSearchDao;
 import com.kuangkee.search.pojo.util.SearchResult;
-import com.kuangkee.search.pojo.vo.ArticleVO;
-import com.kuangkee.search.service.IArticleSearchService;
+import com.kuangkee.search.pojo.vo.Article;
+import com.kuangkee.search.service.solr.IArticleSearchService;
 
 /**
  * 搜索Service
@@ -20,9 +20,9 @@ import com.kuangkee.search.service.IArticleSearchService;
 public class ArticleSearchServiceImpl implements IArticleSearchService {
 
 	@Autowired
-	private ArticleSearchDao searchDao;
+	private IArticleSolrSearchDao searchDao;
 	@Override
-	public SearchResult<ArticleVO> search(String qryStr, int page, int rows) throws Exception {
+	public SearchResult<Article> search(String qryStr, int page, int rows) throws Exception {
 		//创建查询对象
 		SolrQuery query = new SolrQuery();
 		//设置查询条件
@@ -38,7 +38,7 @@ public class ArticleSearchServiceImpl implements IArticleSearchService {
 		query.setHighlightSimplePre("<em style=\"color:red\">");
 		query.setHighlightSimplePost("</em>");
 		//执行查询
-		SearchResult<ArticleVO> searchResult = searchDao.search(query);
+		SearchResult<Article> searchResult = searchDao.search(query);
 		//计算查询结果总页数
 		long recordCount = searchResult.getRecordCount();
 		long pageCount = recordCount / rows;

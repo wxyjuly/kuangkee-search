@@ -2,7 +2,7 @@ package com.kuangkee.search.pojo.vo;
 
 import java.util.Date;
 
-public class ArticleVO {
+public class Article {
 
 	private Integer articleId;
 
