@@ -66,6 +66,12 @@
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.sitemesh/sitemesh -->
+		<dependency>
+		    <groupId>org.sitemesh</groupId>
+		    <artifactId>sitemesh</artifactId>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<!-- 配置插件 -->

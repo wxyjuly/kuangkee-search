@@ -31,9 +31,9 @@ public class TestArticleSearchService {
 		int page = 1 ;
 		int rows = 20 ;
 		
-		SearchResult<Article> result = searchService.search(qryStr, page, rows) ;
-		log.info("[查询结果]-->"+result.getResult());
-		System.out.println(result.getResult());
+//		SearchResult<Article> result = searchService.search(qryStr, page, rows) ;
+//		log.info("[查询结果]-->"+result.getResult());
+//		System.out.println(result.getResult());
 	}
 
 }
