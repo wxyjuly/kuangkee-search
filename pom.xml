@@ -57,10 +57,10 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.sitemesh/sitemesh -->
-		<dependency>
+<!-- 		<dependency>
 		    <groupId>org.sitemesh</groupId>
 		    <artifactId>sitemesh</artifactId>
-		</dependency>
+		</dependency> -->
 		
 	</dependencies>
 	<build>

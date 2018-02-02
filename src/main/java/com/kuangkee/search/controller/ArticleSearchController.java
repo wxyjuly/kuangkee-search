@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kuangkee.common.pojo.KuangkeeResult;
+import com.kuangkee.common.utils.SearchResult;
 import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
 import com.kuangkee.common.utils.exception.ExceptionUtil;
-import com.kuangkee.search.TestArticleSearchService;
-import com.kuangkee.search.pojo.util.SearchResult;
-import com.kuangkee.search.pojo.vo.Article;
-import com.kuangkee.search.service.solr.IArticleSearchService;
+import com.kuangkee.search.pojo.Article;
+import com.kuangkee.service.solr.IArticleSearchService;
 
 /**
  * 文章查询Controller
@@ -52,8 +51,14 @@ public class ArticleSearchController {
 			@RequestParam(defaultValue="1")Integer page, 
 			@RequestParam(defaultValue="10")Integer rows) {
 		
+		//---test start--
+		boolean flag = true ;
+		if(flag) {
+			log.error("-------->search info") ;
+			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
+		}
+		//---test end--
 		
-		log.error("--------> info") ;
 		//查询条件不能为空
 		if (StringUtils.isBlank(qryStr)) {
 			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
