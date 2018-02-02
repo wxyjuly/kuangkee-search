@@ -1,0 +1,1 @@
+var baseProject = "/kuangkee-search" ;

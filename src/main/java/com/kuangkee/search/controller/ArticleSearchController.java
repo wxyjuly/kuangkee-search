@@ -33,7 +33,7 @@ public class ArticleSearchController {
 	private IArticleSearchService articleSearchService;
 	
 	/**
-	 * 
+	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
 	 * search:查询核心业务. <br/>
 	 * 查询规则：
 	 * 1. 优先按照错误代码(只包含字母和数字)进行匹配
