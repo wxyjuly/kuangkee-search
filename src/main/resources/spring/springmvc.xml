@@ -16,7 +16,7 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<!-- 资源映射 -->
+	<!-- 设置不拦截资源映射；对静态资源拦截，放行 -->
 	<mvc:resources location="/resources/" mapping="/resources/**"/>
 	
 </beans>
