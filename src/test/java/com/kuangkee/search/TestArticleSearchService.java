@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.kuangkee.common.utils.SearchResult;
+import com.kuangkee.search.pojo.Article;
 import com.kuangkee.service.solr.IArticleSearchService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,9 +31,9 @@ public class TestArticleSearchService {
 		int page = 1 ;
 		int rows = 20 ;
 		log.info("----------> info");
-//		SearchResult<Article> result = searchService.search(qryStr, page, rows) ;
-//		log.info("[查询结果]-->"+result.getResult());
-//		System.out.println(result.getResult());
+		SearchResult<Article> result = searchService.search(qryStr, page, rows) ;
+		log.info("[查询结果]-->"+result.getResult());
+		System.out.println(result.getResult());
 	}
 
 }
