@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.kuangkee.search.pojo.util.SearchResult;
-import com.kuangkee.search.pojo.vo.Article;
-import com.kuangkee.search.service.solr.IArticleSearchService;
+import com.kuangkee.service.solr.IArticleSearchService;
+
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:spring/applicationContext-*.xml" })

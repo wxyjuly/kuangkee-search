@@ -11,6 +11,7 @@
 		<welcome-file>default.html</welcome-file>
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>resources/html/module/search-index.html</welcome-file>
 	</welcome-file-list>
 	<!-- 加载spring容器 -->
 	<context-param>
@@ -33,6 +34,17 @@
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<!-- siteMesh 粘合前后端数据 -->
+<!-- 	<filter>
+	    <filter-name>sitemesh</filter-name>
+	    <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>sitemesh</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+	
 	<!-- springmvc的前端控制器 -->
 	<servlet>
 		<servlet-name>kuangkee-search</servlet-name>
