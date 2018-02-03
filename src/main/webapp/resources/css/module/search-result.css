@@ -114,7 +114,53 @@ a {
 		font-size: 15px;
 	}
 }
+
 /* 内容部分  */
+/* search-content */
+.search-context-block {
+	width: 90%;
+	height: 2rem;
+	border: 1px solid #D3D3D3;
+	border-radius: 3px;
+	text-align: center;
+	padding: 0.2rem;
+}
+.search-context-input {
+	width: 87%;
+	border: 0;
+	float: left;
+	color: black;
+	padding-left: 3%;
+	font-size: 0.6rem;
+	height: 1.6rem;
+	float: left;
+	line-height: 1.6rem;
+}
+.search-context-btn {
+	width: 13%; height: 1.6rem; float: left; line-height: 1.6rem;
+}
+.search-context-img {
+	width: 1rem; height: 1rem;
+}
 
-
+/* brand */
+.container-line {
+	margin: 10% auto 7%; font-size: 1rem; color: #2a378f;
+}
+.container-brand-outter-div {
+	padding: 2% 2%;
+}
+.container-brand-inner-div {
+	border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;
+}
+.container-brand-inner-span {
+	width: 20%; display: none; position: absolute; bottom: 0; right: 0;
+}
+.container-brand-inner-span-img {
+	width: 100%; display: block;
+}
+/* search-btn */
+.container-search-btn{
+	width: 90%; height: 1.7rem; line-height: 1.7rem; background: #81acea; border-radius: 25px; color: white; font-size: 1rem; margin-top: 10%;
+}
 

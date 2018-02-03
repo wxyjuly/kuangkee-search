@@ -11,11 +11,12 @@ var ID_TYPE = "ID_TYPE" ;
  * @param val
  * @returns
  */
+
 function setAttr(selectorType,key,val){
 	if(CLASS_TYPE==selectorType){
-		$('.'+key).attr(key,val) ;
+		$('.'+key).val(val) ;
 	} else if(ID_TYPE==selectorType){
-		$('#'+key).attr(key,val) ;
+		$('#'+key).val(val) ;
 	}
 }
 /**
@@ -26,9 +27,9 @@ function setAttr(selectorType,key,val){
  */
 function getAttr(selectorType,key){
 	if(CLASS_TYPE==selectorType){
-		$('.'+key).attr(key) ;
+		return $('.'+key).val() ;
 	} else if(ID_TYPE==selectorType){
-		$('#'+key).attr(key) ;
+		return $('#'+key).val() ;
 	}
 }
 
@@ -72,7 +73,7 @@ function getTime() {
  * @returns {null}
  * @private
  */
-function getURLStr(name) {
+function getURLParamVal(name) {
 	// //但是在使用的过程中，发现其在获取中文参数的时候，获取到的值是乱码的
 	//解决办法:将解码方式unscape换为decodeURI
 	//原因:浏览器会将url中的中文参数进行encodeURI编码，所以要通过js使用decodeURI进行解码
@@ -80,6 +81,31 @@ function getURLStr(name) {
 	var r = window.location.search.substr(1).match(reg);
 	if (r != null) return decodeURI(r[2]);
 	return null;
+}
+
+/**
+ * 按照数组标识的key类型和选择器类型，批量将地址栏数据初始化到对应的位置。
+ * 批量支持Id选择器或者class选择的[数组]
+ */
+function renderHiddenParamsByArray(arrSelectorKeys, selectorType) {
+	if(isEmpty(arrSelectorKeys)
+			||isEmpty(selectorType)) {
+		return ;
+	}
+	var tmpSelectorKey ;
+	var addrVal ;
+	for(var i=0; i<arrSelectorKeys.length; i++){
+		tmpSelectorKey = arrSelectorKeys[i] ;
+		if(isEmpty(tmpSelectorKey)){
+			continue ;
+		}
+		addrVal = getURLParamVal(tmpSelectorKey);
+		if(CLASS_TYPE==selectorType){
+			$('.'+tmpSelectorKey).val(addrVal);
+		} else if(ID_TYPE==selectorType){
+			$('#'+tmpSelectorKey).val(addrVal);
+		}
+	}
 }
 
 /**
@@ -109,66 +135,6 @@ function addKeyEnterPressBtn() {
 }
 
 /**
- * 获取并显示定位，参数存放在
- * lng ， lat 隐藏域
- * @returns
- */
-function getAndSetGeo(){
-	//get geolocation-获取地理位置
-	var geolocation = new BMap.Geolocation();
-	var gc = new BMap.Geocoder();
-	geolocation.getCurrentPosition(function(r) { //定位结果对象会传递给r变量  
-		// alert(this.getStatus());return false;
-		if (this.getStatus() == BMAP_STATUS_SUCCESS) { //通过Geolocation类的getStatus()可以判断是否成功定位。  
-			// var pt = r.point;    
-			// gc.getLocation(pt, function(rs){    
-			// var addComp = rs.addressComponents;    
-			// console.log(r);
-			$('#lng').val(r.longitude);
-			$('#lat').val(r.latitude);
-			// $("#thecity").html(addComp.city);
-			// });  
-		} else {
-			//关于状态码    
-			//BMAP_STATUS_SUCCESS   检索成功。对应数值“0”。    
-			//BMAP_STATUS_CITY_LIST 城市列表。对应数值“1”。    
-			//BMAP_STATUS_UNKNOWN_LOCATION  位置结果未知。对应数值“2”。    
-			//BMAP_STATUS_UNKNOWN_ROUTE 导航结果未知。对应数值“3”。    
-			//BMAP_STATUS_INVALID_KEY   非法密钥。对应数值“4”。    
-			//BMAP_STATUS_INVALID_REQUEST   非法请求。对应数值“5”。    
-			//BMAP_STATUS_PERMISSION_DENIED 没有权限。对应数值“6”。(自 1.1 新增)    
-			//BMAP_STATUS_SERVICE_UNAVAILABLE   服务不可用。对应数值“7”。(自 1.1 新增)    
-			//BMAP_STATUS_TIMEOUT   超时。对应数值“8”。(自 1.1 新增)    
-			switch (this.getStatus()) {
-			case 2:
-				alert('位置结果未知 获取位置失败.');
-				break;
-			case 3:
-				alert('导航结果未知 获取位置失败..');
-				break;
-			case 4:
-				alert('非法密钥 获取位置失败.');
-				break;
-			case 5:
-				alert('对不起,非法请求位置  获取位置失败.');
-				break;
-			case 6:
-				alert('对不起,当前 没有权限 获取位置失败.');
-				break;
-			case 7:
-				alert('对不起,服务不可用 获取位置失败.');
-				break;
-			case 8:
-				alert('对不起,请求超时 获取位置失败.');
-				break;
-			}
-		}
-	}, {
-		enableHighAccuracy : true
-	});
-}
-
-/**
  * 校验是否登陆
  * @param userToken
  * @returns
@@ -187,7 +153,6 @@ function checkIsLogin(userToken) {
 $(function() {
 	var userToken ;
 	checkIsLogin(userToken) ;
-	getAndSetGeo() ;	
 	setHtmlUrlTimestamps() ; //add timestamp for all url
 }) ;
 

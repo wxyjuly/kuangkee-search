@@ -12,21 +12,25 @@
 <link rel="stylesheet" href="../../css/module/search-result.css">
 
 <script type="text/javascript" src="../../js/common/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../js/common/common.js"></script>
+<script type="text/javascript" src="../../js/module/search-result.js"></script>
 </head>
 
 <body>
 	<div class="container">
-		<a href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;do=list&amp;m=wx_search">
+		<a href="javascript:void(0);" id="redirect-search-index">
 			<img class="center-block" id="searchimg" src="../../img/common/logo.png" style="margin: 10% auto 5%; width: 50%; height: 1rem;">
 		</a>
 	</div>
-	<div class="center-block" style="width: 90%; height: 2rem; border: 1px solid #D3D3D3; border-radius: 3px; text-align: center; padding: 0.2rem">
-		<input style="width: 87%; border: 0; float: left; color: black; padding-left: 3%; font-size: 0.6rem; height: 1.6rem; float: left; line-height: 1.6rem;"
-			type="text" name="title" placeholder="请输入故障代码或关键字" value="1">
-		<span style="width: 13%; height: 1.6rem; float: left; line-height: 1.6rem;" onclick="sub()">
-			<img style="width: 1rem; height: 1rem;" src="../../img/common/search.png">
+	
+	<!-- search text，搜索文本框 -->
+	<div class="center-block search-context-block">
+		<input class="search-context-input"	type="text" name="title" placeholder="请输入故障代码或关键字" value="">
+		<span class="search-context-btn" onclick="sub()">
+			<img class="search-context-img" src="../../img/common/search.png">
 		</span>
 	</div>
+	
 	<br>
 
 	<div class="container">
@@ -37,39 +41,32 @@
 				<img style="width: 100%;" src="../../img/module/ZIw9y266i1Zi9DzW26CYiu0OUEiiuZ.jpg">
 			</div>
 		</a>
+		
 		<div style="width: 100%; float: left; height: 2rem; border: 1px solid #eaeaea; border-top: 0; line-height: 2rem;">
 			<a href="./search-index.html?i=26&amp;c=entry&amp;id=1043&amp;do=detail&amp;m=wx_search">
-
 				<div style="float: left; font-size: 0.7rem;">
-					<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家</span>
-				</div>
-				<span style="width: 30%; height: 1rem; float: right; line-height: 2rem; text-align: right;">
+					<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家&nbsp;&nbsp;</span>
+					
 					<img style="height: 0.7rem;" src="../../img/module/turn.png">
 					<span style="color: #f05a28; font-size: 0.7rem;">戳我&nbsp;</span>
-				</span>
+					
+				</div>
 			</a>
 		</div>
 
-		<a
-			href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;id=1042&amp;do=detail&amp;m=wx_search">
-			<div
-				style="width: 100%; float: left; border: 1px solid #eaeaea; border-top: 0;">
-				<img style="width: 100%;"
-					src="../../img/module/jYtIBu9D1ymyRzd9B6DEZ1Yvb1UTvD.jpg">
+		<a href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;id=1042&amp;do=detail&amp;m=wx_search">
+			<div style="width: 100%; float: left; border: 1px solid #eaeaea; border-top: 0;">
+				<img style="width: 100%;" src="../../img/module/jYtIBu9D1ymyRzd9B6DEZ1Yvb1UTvD.jpg">
 			</div>
 		</a>
 		 
-		<div
-			style="width: 100%; float: left; height: 2rem; border: 1px solid #eaeaea; border-top: 0; line-height: 2rem;">
-			<a
-				href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;id=1042&amp;do=detail&amp;m=wx_search">
-
+		<div style="width: 100%; float: left; height: 2rem; border: 1px solid #eaeaea; border-top: 0; line-height: 2rem;">
+			<a href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;id=1042&amp;do=detail&amp;m=wx_search">
 				<div style="float: left; font-size: 0.7rem;">
-					<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家</span>
-				</div> <span
-				style="width: 30%; height: 1rem; float: right; line-height: 2rem; text-align: right;"><img
-					style="height: 0.7rem;" src="../../img/module/turn.png"><span
-					style="color: #f05a28; font-size: 0.7rem;">戳我&nbsp;</span></span>
+					<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家&nbsp;&nbsp;</span>
+					<img style="height: 0.7rem;" src="../../img/module/turn.png">
+					<span style="color: #f05a28; font-size: 0.7rem;">戳我&nbsp;</span>
+				</div> 
 			</a>
 		</div>
 
@@ -81,59 +78,31 @@
 		<div style="width: 100%; float: left; height: 2rem; border: 1px solid #eaeaea; border-top: 0; line-height: 2rem;">
 			<a href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;id=61&amp;do=detail&amp;m=wx_search">
 				<div style="float: left; font-size: 0.7rem;">
-					<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家</span>
-				</div> 
-				<span style="width: 30%; height: 1rem; float: right; line-height: 2rem; text-align: right;">
+					<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家&nbsp;&nbsp;</span>
 					<img style="height: 0.7rem;" src="../../img/module/turn.png">
 					<span style="color: #f05a28; font-size: 0.7rem;">戳我&nbsp;</span>
-				</span>
+				</div> 
 			</a>
 		</div>
 	</div>
 
-	<input type="hidden" id="thisclass" value="44">
-	<input type="hidden" id="lng" value="113.85991703">
-	<!-- 经度 -->
-	<input type="hidden" id="lat" value="27.63954422">
-	<!-- 纬度 -->
+		<input type="hidden" id="userToken" value="">
+		<input type="hidden" id="brandId" value="">
+		<input type="hidden" id="brandName" value="">
+		<!-- 经度 -->
+		<input type="hidden" id="lng" value="">
+		<!-- 纬度 -->
+		<input type="hidden" id="lat" value="">
 	<br>
 	<br>
 	<br>
-	<script type="text/javascript"
-		src="./05-search-success_files-/index.php"></script>
-	<script type="text/javascript">
-		var first = $('.d0').addClass('active');
-		var aClass = $('.row .col-xs-3');
-		aClass.each(function() {
-			$(this).click(function() {
-				$(this).addClass('active').siblings().removeClass('active');
-				var thisclass = $(this).attr('rel');
-				$('#thisclass').val(thisclass);
-			});
-		});
 
-		function sub() {
-			// alert(111);
-			var thetitle = $("input[name='title']").val();
-			if (thetitle == '' || thetitle == undefined) {
-				alert('请先输入搜索内容');
-				return false;
-			}
-			var finallyclass = $('#thisclass').val();
-			var lng = $('#lng').val();
-			var lat = $('#lat').val();
-			location.href = "./index.php?i=26&c=entry&do=result&m=wx_search&thetitle="
-					+ thetitle
-					+ "&finallyclass="
-					+ finallyclass
-					+ "&lng="
-					+ lng + "&lat=" + lat;
-		}
-		$("body").keydown(function() {
-			if (event.keyCode == "13") {
-				sub();
-			}
-		});
-	</script>
+<!-- 滑动分页，效果：http://zixuephp.net/article-181.html -->
+<!-- 记录初始化的页数，now为当前页，num为总页数，这个数值的设置是通过php获取分页的时候的总页数 -->
+<div class="caseud" now="1" num="2">
+    <a href="javascript:void(0);">加载更多</a>    
+</div>
+
+
 </body>
 </html>
