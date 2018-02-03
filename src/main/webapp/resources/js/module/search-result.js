@@ -15,13 +15,27 @@
 			alert('请先输入搜索内容');
 			return false;
 		}
+		var userToken = $('#userToken').val();
 		var brandId = $('#brandId').val();
 		var brandName = $('#brandName').val();
 		var lng = $('#lng').val();
 		var lat = $('#lat').val();
 		
 		//ajax 查询数据
+		var url = baseProjectPath+"/query" ;
+		var data = {} ;
+		data["searchContent"] = searchContent ;
+		data["userToken"] = userToken ;
+		data["brandId"] = brandId ;
+		data["brandName"] = brandName ;
+		data["longitude"] = lng ;
+		data["latitude"] = lat ;
+		data = JSON.stringify(data) ;
 		
+		var result = ajaxJsonTemplate(url,data) ;
+		if(!isEmpty(result)) {
+			alert("---------");
+		}
 	}
 	
 	/**
