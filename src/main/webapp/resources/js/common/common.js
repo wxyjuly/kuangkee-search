@@ -156,5 +156,8 @@ $(function() {
 	setHtmlUrlTimestamps() ; //add timestamp for all url
 }) ;
 
+/**---------:TODO 添加
+	1. Ajax  
+	2. JSRender	
+*/
 
-	
