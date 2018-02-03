@@ -12,8 +12,11 @@
 <link rel="stylesheet" href="../../css/common/weui.min.css">
 <link rel="stylesheet" href="../../css/module/search-index.css">
 
-<script type="text/javascript" src="../../js/common/common-head.js"></script>
 <script type="text/javascript" src="../../js/common/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../js/common/api.js"></script>
+<script type="text/javascript" src="../../js/common/getscript.js"></script>
+<script type="text/javascript" src="../../js/common/common-head.js"></script>
+<script type="text/javascript" src="../../js/module/search-index.js"></script>
 <!-- <script type="text/javascript">
   console.log("array(9) {
   ["uid"]=>
@@ -38,266 +41,163 @@
 ;");
 </script> -->
 </head>
+
 <body>
 	<div class="container" style="text-align: center;">
 		<img id="searchimg" src="../../img/common/logo.png" style="margin: 10% auto 5%; width: 50%; height: 1rem;">
 	</div>
-	<div class="center-block" style="width: 90%; height: 2rem; border: 1px solid #D3D3D3; border-radius: 3px; text-align: center; padding: 0.2rem">
-		<input style="width: 87%; border: 0; float: left; color: black; padding-left: 3%; font-size: 0.6rem; height: 1.6rem; float: left; line-height: 1.6rem;"
-			type="text" name="title" placeholder="请输入故障代码或关键字" value="">
-		<span style="width: 13%; height: 1.6rem; float: left; line-height: 1.6rem;" onclick="sub()">
-			<img style="width: 1rem; height: 1rem;" src="../../img/common/search.png">
+	<!-- search text，搜索文本框 -->
+	<div class="center-block search-context-block">
+		<input class="search-context-input"	type="text" name="title" placeholder="请输入故障代码或关键字" value="">
+		<span class="search-context-btn" onclick="sub()">
+			<img class="search-context-img" src="../../img/common/search.png">
 		</span>
 	</div>
 	
 	<div class="container" style="text-align: center;">
-		<div style="margin: 10% auto 7%; font-size: 1rem; color: #2a378f">───&nbsp;&nbsp;请选择品牌&nbsp;&nbsp;───</div>
+		<div class="container-line">───&nbsp;&nbsp;请选择品牌&nbsp;&nbsp;───</div>
 		<div class="row">
-			<div class="col-xs-3 d0 active" rel="44" style="padding: 2% 2%;">
-				<div style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+		
+			<div class="col-xs-3 d0 active container-brand-outter-div" rel="44" brand_id="44" brand_name="小松">
+				<div class="container-brand-inner-div" >
 					小松 
-					<span style="width: 20%; display: none; position: absolute; bottom: 0; right: 0">
-						<img src="../../img/module/ico-select.png" style="width: 100%; display: block;">
+					<span class="container-brand-inner-span">
+						<img src="../../img/module/ico-select.png" class="container-brand-inner-span-img">
 					</span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d1" rel="45" style="padding: 2% 2%;">
-				<div style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+			<div class="col-xs-3 container-brand-outter-div d1 " rel="45" brand_id="45" brand_name="卡特 ">
+				<div class="container-brand-inner-div">
 					卡特 
-					<span style="width: 20%; display: none; position: absolute; bottom: 0; right: 0">
-						<img src="../../img/module/ico-select.png" style="width: 100%; display: block;">
+					<span class="container-brand-inner-span">
+						<img src="../../img/module/ico-select.png" class="container-brand-inner-span-img">
 					</span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d2" rel="46" style="padding: 2% 2%;">
-				<div style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+			<div class="col-xs-3 container-brand-outter-div d2" rel="46" >
+				<div class="container-brand-inner-div">
 					日立 
-					<span style="width: 20%; display: none; position: absolute; bottom: 0; right: 0">
-						<img src="../../img/module/ico-select.png" style="width: 100%; display: block;">
+					<span class="container-brand-inner-span">
+						<img src="../../img/module/ico-select.png" class="container-brand-inner-span-img">
 					</span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d3" rel="47" style="padding: 2% 2%;">
-				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
-					神钢 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
-						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+			<div class="col-xs-3 container-brand-outter-div d3" rel="47" >
+				<div class="container-brand-inner-div">
+					神钢 
+					<span class="container-brand-inner-span">
+						<img src="../../img/module/ico-select.png" class="container-brand-inner-span-img">
+					</span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d4" rel="48" style="padding: 2% 2%;">
-				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
-					三一 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
-						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+			<div class="col-xs-3 container-brand-outter-div d4" rel="48" >
+				<div class="container-brand-inner-div">
+					三一 
+					<span class="container-brand-inner-span">
+						<img src="../../img/module/ico-select.png" class="container-brand-inner-span-img">
+					</span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d5" rel="49" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d5" rel="49" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					加藤 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d6" rel="50" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d6" rel="50" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					住友 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d7" rel="51" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d7" rel="51" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					现代 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d8" rel="52" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d8" rel="52" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					凯斯 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d9" rel="53" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d9" rel="53" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					沃尔沃 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d10" rel="88" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d10" rel="88" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					斗山 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d11" rel="91" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d11" rel="91" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					徐工 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 			
-			<div class="col-xs-3 d12" rel="89" style="padding: 2% 2%;">
+			<div class="col-xs-3 container-brand-outter-div d12" rel="89" >
 				<div
-					style="border: 1px solid #EAEAEA; border-radius: 3px; height: 1.4rem; line-height: 1.4rem; color: #4c4c4c; position: relative; font-size: 0.6rem;">
+					class="container-brand-inner-div">
 					装载机 <span
-						style="width: 20%; display: none; position: absolute; bottom: 0; right: 0"><img
+						class="container-brand-inner-span"><img
 						src="../../img/module/ico-select.png"
-						style="width: 100%; display: block;"></span>
+						class="container-brand-inner-span-img"></span>
 				</div>
 			</div>
 		</div>
-		<div onclick="sub()" class="center-block"
-			style="width: 90%; height: 1.7rem; line-height: 1.7rem; background: #81acea; border-radius: 25px; color: white; font-size: 1rem; margin-top: 10%;">查询</div>
+		
+		<div onclick="sub()" class="center-block container-search-btn">
+			查询
+		</div>
+		
+		<input type="hidden" id="userToken" value="Xxx">
 		<input type="hidden" id="thisclass" value="44">
+		<input type="hidden" id="brandId" value="44">
+		<input type="hidden" id="brandName" value="小松">
 	</div>
-	<input type="hidden" id="lng" value="113.85991703">
-	<!-- 经度 -->
-	<input type="hidden" id="lat" value="27.63954422">
-	<!-- 纬度 -->
-	<script>
-		;
-	</script>
-	<script type="text/javascript" src="./03-search-index_files/index.php"></script>
-	<script type="text/javascript">
-		var come = $('#thisclass').val();
-		var dorel = $('.d0').attr('rel');
-		var aClass = $('.row .col-xs-3');
-		// alert(come+'+'+dorel);
-		if (come == dorel) {
-			var first = $('.d0').addClass('active');
-		} else {
-			aClass
-					.each(function() {
-						if ($(this).attr('rel') == come) {
-							$(this).addClass('active').siblings().removeClass(
-									'active');
-							$(this).children('span').show().siblings().hide();
-						}
-					});
-		}
-
-		aClass.each(function() {
-			$(this).click(function() {
-				$(this).addClass('active').siblings().removeClass('active');
-				$(this).children('span').show().siblings().hide();
-				var thisclass = $(this).attr('rel');
-				$('#thisclass').val(thisclass);
-			});
-		});
-		function sub() {
-			var thetitle = $("input[name='title']").val();
-			if (thetitle == '' || thetitle == undefined) {
-				alert('请先输入搜索内容');
-				return false;
-			}
-			var finallyclass = $('#thisclass').val();
-			var lng = $('#lng').val();
-			var lat = $('#lat').val();
-			location.href = "./index.php?i=26&c=entry&do=result&m=wx_search&thetitle="
-					+ thetitle
-					+ "&finallyclass="
-					+ finallyclass
-					+ "&lng="
-					+ lng + "&lat=" + lat;
-		}
-		$("body").keydown(function() {
-			if (event.keyCode == "13") {
-				sub();
-			}
-		});
-	</script>
-	<script src="../../js/common/api.js"></script>
-	<script type="text/javascript" src="../../js/common/getscript.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			var geolocation = new BMap.Geolocation();
-			var gc = new BMap.Geocoder();
-
-			geolocation.getCurrentPosition(function(r) { //定位结果对象会传递给r变量  
-				// alert(this.getStatus());return false;
-				if (this.getStatus() == BMAP_STATUS_SUCCESS) { //通过Geolocation类的getStatus()可以判断是否成功定位。  
-					// var pt = r.point;    
-					// gc.getLocation(pt, function(rs){    
-					// var addComp = rs.addressComponents;    
-					// console.log(r);
-					$('#lng').val(r.longitude);
-					$('#lat').val(r.latitude);
-					// $("#thecity").html(addComp.city);
-					// });  
-				} else {
-					//关于状态码    
-					//BMAP_STATUS_SUCCESS   检索成功。对应数值“0”。    
-					//BMAP_STATUS_CITY_LIST 城市列表。对应数值“1”。    
-					//BMAP_STATUS_UNKNOWN_LOCATION  位置结果未知。对应数值“2”。    
-					//BMAP_STATUS_UNKNOWN_ROUTE 导航结果未知。对应数值“3”。    
-					//BMAP_STATUS_INVALID_KEY   非法密钥。对应数值“4”。    
-					//BMAP_STATUS_INVALID_REQUEST   非法请求。对应数值“5”。    
-					//BMAP_STATUS_PERMISSION_DENIED 没有权限。对应数值“6”。(自 1.1 新增)    
-					//BMAP_STATUS_SERVICE_UNAVAILABLE   服务不可用。对应数值“7”。(自 1.1 新增)    
-					//BMAP_STATUS_TIMEOUT   超时。对应数值“8”。(自 1.1 新增)    
-					switch (this.getStatus()) {
-					case 2:
-						alert('位置结果未知 获取位置失败.');
-						break;
-					case 3:
-						alert('导航结果未知 获取位置失败..');
-						break;
-					case 4:
-						alert('非法密钥 获取位置失败.');
-						break;
-					case 5:
-						alert('对不起,非法请求位置  获取位置失败.');
-						break;
-					case 6:
-						alert('对不起,当前 没有权限 获取位置失败.');
-						break;
-					case 7:
-						alert('对不起,服务不可用 获取位置失败.');
-						break;
-					case 8:
-						alert('对不起,请求超时 获取位置失败.');
-						break;
-
-					}
-				}
-			}, {
-				enableHighAccuracy : true
-			})
-		})
-	</script>
+		<!-- 经度 -->
+		<input type="hidden" id="lng" value="113.85991703">
+		<!-- 纬度 -->
+		<input type="hidden" id="lat" value="27.63954422">
+	
+	
 </body>
 </html>
