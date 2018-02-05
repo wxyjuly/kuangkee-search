@@ -162,24 +162,8 @@ $(function() {
 */
 
 /* 1. Ajax */ 
-function ajaxJsonTemplate(url,data) {
-	$.ajax({  
-	    type: "post",  
-	    url: url,  
-	    async: false, // 使用同步方式  
-	    // 1 需要使用JSON.stringify 否则格式为 a=2&b=3&now=14...  
-	    // 2 需要强制类型转换，否则格式为 {"a":"2","b":"3"}  
-	    data: data,  
-	    contentType: "application/json; charset=utf-8",  
-	    dataType: "json",  
-	    success: function(data) {  
-	        return data ;  
-	    }
-//		,error:function(data) { 
-//			alert("系统出错") ;
-//	    } 
-	});  
-}
+
+
 
 
 

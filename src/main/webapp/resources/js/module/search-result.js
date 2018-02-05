@@ -2,15 +2,18 @@
 	$(function() {	//page init
 //		brandInitAndChange() ; 		
 		addKeyEnterPressBtn() ;
-//		var userToken = 'userToken' ;
-//		alert(getAttr(ID_TYPE,userToken));
 		initURLParams() ;
-		
 		redirectSearchIndex() ;
+		sub(2) ; //初始化提交搜索
 	});
 	
-	function sub() {
-		var searchContent = $(".search-context-input").val();
+	function sub(type) {
+		var searchContent ;
+		if(1==type) {
+			searchContent = $(".search-context-input").val();
+		} else {
+			searchContent = $("#searchContent").val();
+		}
 		if (isEmpty(searchContent)) {
 			alert('请先输入搜索内容');
 			return false;
@@ -30,12 +33,25 @@
 		data["brandName"] = brandName ;
 		data["longitude"] = lng ;
 		data["latitude"] = lat ;
-		data = JSON.stringify(data) ;
+
+		var queryData = {
+				"searchContent": data.searchContent, 
+				"userToken": data.userToken,
+				"brandId": data.brandId,
+				"brandName": data.brandName,
+				"longitude": data.longitude,
+				"latitude": data.latitude
+				};
 		
-		var result = ajaxJsonTemplate(url,data) ;
-		if(!isEmpty(result)) {
-			alert("---------");
-		}
+		//ajax
+		$.post(url,data,function(data){
+			if(!isEmpty(data)) { //成功，显示
+				alert("---------");
+			} else { //error，给提示
+				
+			}
+		});
+		
 	}
 	
 	/**
@@ -113,7 +129,6 @@
 	 */
 	function redirectSearchIndex() {
 		$("#redirect-search-index").click(function(){
-			alert("-->"+getAttr(ID_TYPE,'userToken')) ;
 			window.location.href="./search-index.html?userToken="+getAttr(ID_TYPE,'userToken') ;
 		}) ;
 	}
@@ -125,10 +140,11 @@
 	function initURLParams() {
 		var arrSelectorKeys = new Array() ;
 		arrSelectorKeys[0] = "userToken" ;
-		arrSelectorKeys[1] = "brandId" ;
-		arrSelectorKeys[2] = "brandName" ;
-		arrSelectorKeys[3] = "lng" ;
-		arrSelectorKeys[4] = "lat" ;
+		arrSelectorKeys[1] = "searchContent" ;
+		arrSelectorKeys[2] = "brandId" ;
+		arrSelectorKeys[3] = "brandName" ;
+		arrSelectorKeys[4] = "lng" ;
+		arrSelectorKeys[5] = "lat" ;
 		renderHiddenParamsByArray(arrSelectorKeys, ID_TYPE) ;
 	}
 	

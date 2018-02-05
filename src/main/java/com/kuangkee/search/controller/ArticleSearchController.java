@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,51 +36,6 @@ public class ArticleSearchController {
 	private IArticleSearchService articleSearchService;
 	
 	/**
-	 * @deprecated
-	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
-	 * search:查询核心业务. <br/>
-	 * 查询规则：
-	 * 1. 优先按照错误代码(只包含字母和数字)进行匹配
-	 * 2. 错误代码无法匹配，再通过文章正文内容进行匹配
-	 * 若两者均无法匹配，给出一些提示
-	 * @author Leon Xi
-	 * @param qryStr
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	@RequestMapping(value="/query1", method= {RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public KuangkeeResult search(
-			@RequestParam("q") String qryStr, 
-			@RequestParam(defaultValue="1")Integer page, 
-			@RequestParam(defaultValue="10")Integer rows) {
-		
-		//---test start--
-		boolean flag = true ;
-		if(flag) {
-			log.error("-------->search info") ;
-			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
-		}
-		//---test end--
-		
-		//查询条件不能为空
-		if (StringUtils.isBlank(qryStr)) {
-			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
-		}
-		
-		SearchResult<Article> searchResult = null;
-		try {
-			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
-			searchResult = articleSearchService.search(qryStr, page, rows);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
-		}
-		return KuangkeeResult.ok(searchResult);
-	}
-	
-	/**
 	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
 	 * search:查询核心业务. <br/>
 	 * 查询规则：
@@ -95,22 +49,13 @@ public class ArticleSearchController {
 	 * @return
 	 */
 	@RequestMapping(value="/query")
-	@ResponseBody
 	public KuangkeeResult search(
-//			:TODO Bean无法绑定问题
+//			:TODO Bean无法绑定问题,通过$(post)
 			UserSearchLogReq searchReq, 
 			@RequestParam(defaultValue="1")Integer page, 
 			@RequestParam(defaultValue="10")Integer rows,
 			HttpServletRequest request) {
 		
-		//---test start--
-		boolean flag = true ;
-		if(flag) {
-			log.error("-------->search info") ;
-			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
-		}
-		
-		//---test end--
 		String qryStr = searchReq.getSearchContent() ;
 		//查询条件不能为空
 		if (StringUtils.isBlank(qryStr)) {

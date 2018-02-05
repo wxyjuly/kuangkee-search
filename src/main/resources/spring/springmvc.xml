@@ -9,6 +9,12 @@
 
 	<context:component-scan base-package="com.kuangkee.search.controller" />
 	
+    <!-- 自动扫描的包名 单点 -->
+<!-- 	<context:component-scan base-package="com.kuangkee.search">
+        <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
+    </context:component-scan> -->
+	
+	
 	<mvc:annotation-driven />
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -18,5 +24,32 @@
 	
 	<!-- 设置不拦截资源映射；对静态资源拦截，放行 -->
 	<mvc:resources location="/resources/" mapping="/resources/**"/>
+	
+	
+	<!-- 避免IE在ajax请求时，返回json出现下载 -->
+    <bean id="jacksonMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <!--Spring3.1开始的注解 HandlerMapping -->
+    <!--3.1之后必须存在， 不解-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+    <!--Spring3.1开始的注解 HandlerAdapter -->
+    <!--Spring3.1之前的注解 HandlerAdapter org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jacksonMessageConverter"/>
+                <!-- json转换器 -->
+            </list>
+        </property>
+    </bean>
+	
 	
 </beans>

@@ -28,7 +28,7 @@
 	<!-- search text，搜索文本框 -->
 	<div class="center-block search-context-block">
 		<input class="search-context-input"	type="text" name="title" placeholder="请输入故障代码或关键字" value="">
-		<span class="search-context-btn" onclick="sub()">
+		<span class="search-context-btn" onclick="sub(1)">
 			<img class="search-context-img" src="../../img/common/search.png">
 		</span>
 	</div>
@@ -89,6 +89,7 @@
 	</div>
 
 		<input type="hidden" id="userToken" value="">
+		<input type="hidden" id="searchContent" value="">
 		<input type="hidden" id="brandId" value="">
 		<input type="hidden" id="brandName" value="">
 		<!-- 经度 -->
