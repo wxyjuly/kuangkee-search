@@ -7,17 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kuangkee.common.pojo.KuangkeeResult;
 import com.kuangkee.common.pojo.req.UserSearchLogReq;
 import com.kuangkee.common.utils.SearchResult;
+import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
 import com.kuangkee.common.utils.exception.ExceptionUtil;
 import com.kuangkee.search.pojo.Article;
+import com.kuangkee.search.pojo.UserSearchLog;
+import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
 /**
@@ -34,6 +35,8 @@ public class ArticleSearchController {
 	
 	@Autowired
 	private IArticleSearchService articleSearchService;
+	
+	private IUserSearchLogService userSearchLogService ;
 	
 	/**
 	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
@@ -63,14 +66,76 @@ public class ArticleSearchController {
 		}
 		
 		SearchResult<Article> searchResult = null;
+		searchReq.setIp(request.getRemoteHost());
 		try {
 			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
 			searchResult = articleSearchService.search(qryStr, page, rows);
+			
+			saveUserSearchLog(searchReq, searchResult.getSearchStatus()) ;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
 		}
 		return KuangkeeResult.ok(searchResult);
+	}
+	
+	/**
+	 * 
+	 * saveUserSearchLog:保存用户搜索记录). <br/>
+	 *
+	 * @author Leon Xi
+	 * @param searchReq
+	 * @param request
+	 */
+	private void saveUserSearchLog(UserSearchLogReq searchReq, String searchStatus) {
+		
+		UserSearchLog record = new UserSearchLog() ;
+		Integer brandId = record.getBrandId() ;
+		String brandName = record.getBrandName() ;
+		String searchContent = record.getSearchContent() ;
+		String userName = record.getUserName() ;
+		String phone = record.getPhone() ;
+		String longitude = record.getSearchContent() ;
+		String latitude = record.getSearchContent() ;
+		
+		String isMatch = record.getIsMatch() ;
+		
+		if(MatchUtil.isEmpty(brandId)) {
+			brandId = 0 ;
+		}
+		if(MatchUtil.isEmpty(brandName)) {
+			brandName = "" ;
+		}
+		if(MatchUtil.isEmpty(searchContent)) {
+			searchContent = "" ;
+		}
+		if(MatchUtil.isEmpty(userName)) {
+			userName = "" ;
+		}
+		if(MatchUtil.isEmpty(phone)) {
+			phone = "" ;
+		}
+		if(MatchUtil.isEmpty(longitude)) {
+			longitude = "" ;
+		}
+		if(MatchUtil.isEmpty(latitude)) {
+			latitude = "" ;
+		}
+		if(MatchUtil.isEmpty(isMatch)) {
+			isMatch = SearchResult.SearchStatus.NOT_MATCHED_SEARCH ;
+		}
+		
+		record.setBrandId(brandId);
+		record.setBrandName(brandName);
+		record.setSearchContent(searchContent);
+		record.setUserName(userName);
+		record.setPhone(phone);
+		record.setLongitude(longitude);
+		record.setLatitude(latitude);
+		record.setIsMatch(isMatch);
+		
+		userSearchLogService.insertUserSearchLog(record) ;
 	}
 	
 }
