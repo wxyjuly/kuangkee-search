@@ -100,6 +100,9 @@ function renderHiddenParamsByArray(arrSelectorKeys, selectorType) {
 			continue ;
 		}
 		addrVal = getURLParamVal(tmpSelectorKey);
+		if(isEmpty(addrVal)){
+			continue ;
+		}
 		if(CLASS_TYPE==selectorType){
 			$('.'+tmpSelectorKey).val(addrVal);
 		} else if(ID_TYPE==selectorType){

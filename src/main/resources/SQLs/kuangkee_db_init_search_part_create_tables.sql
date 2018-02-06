@@ -14,9 +14,9 @@ create table tb_brand
    creater              varchar(32)                    null comment '创建者（刚开始默认系统创建，后续通过搜索结果更新）',
    is_show              varchar(1)                     null default '1' 
 		comment '是否显示【1：显示，0：不显示】；是否在搜索页面显示',
-   create_time          datetime                       not null 
+   create_time          datetime                       null 
 		comment '创建时间，当前时间;now()', 
-   update_time          timestamp                      not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP 
+   update_time          datetime                       null  
 		comment '修改时间'
 );
 
@@ -52,9 +52,9 @@ create table tb_user_search_log
 		comment '纬度',
    ip                   varchar(32)                    null
 		comment '搜索用户ip',	
-   create_time          datetime                       not null
+   create_time          datetime                       null
 		comment '创建时间（系统当前时间）;now()',
-   update_time          timestamp                      not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+   update_time          datetime                      null 
 		comment '最后修改时间'
 ) ;
 
@@ -67,9 +67,9 @@ create table tb_article
 (
    article_id           int                            primary key auto_increment
 		comment '自增编号',
-   brand_id             varchar(8)                     not null
+   brand_id             varchar(8)                     null
 		comment '品牌id',
-   brand_name           varchar(32)                    not null
+   brand_name           varchar(32)                    null
 		comment '品牌名称（冗余字段）',
    error_code                varchar(256)              null
 		comment '挖掘机错误编码',		
@@ -79,9 +79,9 @@ create table tb_article
 		comment '子标题',
    img_search_small     varchar(512)                   null
 		comment '文章搜索图片缩略图URL',
-   img_content_big              varchar(512)                   null
+   img_content_big              varchar(512)           null
 		comment '文章图片正文大图',	
-   img_content_small            varchar(512)                   null
+   img_content_small            varchar(512)           null
 		comment '文章图片正文小图',		
    source_url           varchar(512)                   null
 		comment '文章来源',
@@ -95,9 +95,9 @@ create table tb_article
 		comment '创建者信息说明',
    read_times           varchar(10)                    null default '0'	
 		comment '文章阅读次数',
-   create_time          datetime                       not null
+   create_time          datetime                       null
 		comment '创建时间，当前时间;now()',
-   update_time          timestamp                      not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+   update_time          datetime                       null
 		comment '修改时间'
 ) ;
 
@@ -112,9 +112,9 @@ create table tb_article_desc
 		comment '外键，关联tb_article,article_id',
    content              text                           null
 		comment '文章正文',
-   create_time          datetime                       not null
+   create_time          datetime                       null
 		comment '创建时间，当前时间;now()',
-   update_time          timestamp                      not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+   update_time          datetime                       null
 		comment '修改时间'
 ) ;
 

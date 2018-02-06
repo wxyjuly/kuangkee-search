@@ -1,11 +1,17 @@
 package com.kuangkee.search.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +24,8 @@ import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
 import com.kuangkee.common.utils.exception.ExceptionUtil;
 import com.kuangkee.search.pojo.Article;
 import com.kuangkee.search.pojo.UserSearchLog;
+import com.kuangkee.search.pojo.vo.UserInfo;
+import com.kuangkee.search.service.intefacepackage.IUserService;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
@@ -30,13 +38,20 @@ import com.kuangkee.service.solr.IArticleSearchService;
  */
 @RestController
 public class ArticleSearchController {
+	
+	@Value("true")
+	private String SEARCH_LOGIN_ENABLE ; //是否需要登陆
 
 	private static final Logger log = LoggerFactory.getLogger(ArticleSearchController.class) ;
 	
 	@Autowired
 	private IArticleSearchService articleSearchService;
 	
+	@Autowired
 	private IUserSearchLogService userSearchLogService ;
+	
+//	@Autowired
+//	private IUserService userServiceImp;
 	
 	/**
 	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
@@ -59,19 +74,41 @@ public class ArticleSearchController {
 			@RequestParam(defaultValue="10")Integer rows,
 			HttpServletRequest request) {
 		
-		String qryStr = searchReq.getSearchContent() ;
+		String qryStr = searchReq.getOriginalContent() ;
 		//查询条件不能为空
 		if (StringUtils.isBlank(qryStr)) {
 			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
 		}
+		//bean copy from userInfo Inteface
+		if("true".equals(SEARCH_LOGIN_ENABLE)) {
+			
+		}
+		
+//		String uId = searchReq.getTokenId() ;
+//		if(!MatchUtil.isEmpty(uId)) {
+//			try {
+//				UserInfo userInfo = userServiceImp.getUserInfoFromInteface(uId) ;
+//			} catch (BeansException e) {
+//				log.error("搜索用户数据，读取接口或者拷贝失败");
+//				e.printStackTrace();
+//			}
+//		}
 		
 		SearchResult<Article> searchResult = null;
-		searchReq.setIp(request.getRemoteHost());
 		try {
-			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
+//			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
 			searchResult = articleSearchService.search(qryStr, page, rows);
+			searchReq.setSearchContent(qryStr); //设置实际查询值--需过滤掉特殊字符
+			searchReq.setIp(request.getRemoteHost());
+
+			String searchStatus = SearchResult.SearchStatus.NOT_MATCHED_SEARCH ;
 			
-			saveUserSearchLog(searchReq, searchResult.getSearchStatus()) ;
+			if(!MatchUtil.isEmpty(searchStatus)) {
+				searchStatus = searchResult.getSearchStatus() ;
+			} 
+			searchReq.setIsMatch(searchStatus);
+			
+			saveUserSearchLog(searchReq) ; //save search log
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,61 +118,26 @@ public class ArticleSearchController {
 	}
 	
 	/**
-	 * 
-	 * saveUserSearchLog:保存用户搜索记录). <br/>
-	 *
+	 * saveUserSearchLog:保存用户搜索记录;保存不允许抛出异常. <br/>
 	 * @author Leon Xi
 	 * @param searchReq
 	 * @param request
 	 */
-	private void saveUserSearchLog(UserSearchLogReq searchReq, String searchStatus) {
-		
-		UserSearchLog record = new UserSearchLog() ;
-		Integer brandId = record.getBrandId() ;
-		String brandName = record.getBrandName() ;
-		String searchContent = record.getSearchContent() ;
-		String userName = record.getUserName() ;
-		String phone = record.getPhone() ;
-		String longitude = record.getSearchContent() ;
-		String latitude = record.getSearchContent() ;
-		
-		String isMatch = record.getIsMatch() ;
-		
-		if(MatchUtil.isEmpty(brandId)) {
-			brandId = 0 ;
+	private void saveUserSearchLog(UserSearchLogReq searchReq) {
+		try {
+			UserSearchLog record = new UserSearchLog() ;
+			//bean copy from req
+			BeanUtils.copyProperties(searchReq, record);
+			
+			//add different info
+			record.setCreateTime(new Date());
+			record.setUpdateTime(new Date());
+			
+			log.error("record:->"+record);
+			userSearchLogService.insertUserSearchLog(record) ;
+		} catch (BeansException e) {
+			e.printStackTrace();
 		}
-		if(MatchUtil.isEmpty(brandName)) {
-			brandName = "" ;
-		}
-		if(MatchUtil.isEmpty(searchContent)) {
-			searchContent = "" ;
-		}
-		if(MatchUtil.isEmpty(userName)) {
-			userName = "" ;
-		}
-		if(MatchUtil.isEmpty(phone)) {
-			phone = "" ;
-		}
-		if(MatchUtil.isEmpty(longitude)) {
-			longitude = "" ;
-		}
-		if(MatchUtil.isEmpty(latitude)) {
-			latitude = "" ;
-		}
-		if(MatchUtil.isEmpty(isMatch)) {
-			isMatch = SearchResult.SearchStatus.NOT_MATCHED_SEARCH ;
-		}
-		
-		record.setBrandId(brandId);
-		record.setBrandName(brandName);
-		record.setSearchContent(searchContent);
-		record.setUserName(userName);
-		record.setPhone(phone);
-		record.setLongitude(longitude);
-		record.setLatitude(latitude);
-		record.setIsMatch(isMatch);
-		
-		userSearchLogService.insertUserSearchLog(record) ;
 	}
 	
 }

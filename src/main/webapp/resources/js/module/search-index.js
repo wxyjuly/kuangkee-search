@@ -72,23 +72,23 @@
 	}
 	
 	function sub() {
-		var searchContent = $(".search-context-input").val();
+		var key = $(".search-context-input").val();
 		if (isEmpty(searchContent)) {
 			alert('请先输入搜索内容');
 			return false;
 		}
-		var brandId = $('#brandId').val();
-		var brandName = $('#brandName').val();
+		var brandId = $('#bId').val();
+		var brandName = $('#bName').val();
 		var lng = $('#lng').val();
 		var lat = $('#lat').val();
 		
 		location.href = "./search-result.html?"
-				+"searchContent="
-				+ searchContent
-				+ "&brandId="
-				+ brandId
-				+ "&brandName="
-				+ brandName
+				+"key="
+				+ key
+				+ "&bId="
+				+ bId
+				+ "&bName="
+				+ bName
 				+ "&lng="
 				+ lng 
 				+ "&lat=" 
@@ -101,9 +101,9 @@
 	 */
 	function initURLParams() {
 		var arrSelectorKeys = new Array() ;
-		arrSelectorKeys[0] = "userToken" ;
-		arrSelectorKeys[1] = "brandId" ;
-		arrSelectorKeys[2] = "brandName" ;
+		arrSelectorKeys[0] = "uId" ;
+		arrSelectorKeys[1] = "bId" ;
+		arrSelectorKeys[2] = "bName" ;
 		arrSelectorKeys[3] = "lng" ;
 		arrSelectorKeys[4] = "lat" ;
 		renderHiddenParamsByArray(arrSelectorKeys, ID_TYPE) ;
@@ -122,8 +122,8 @@
 			var brandName = curBrandDiv.attr("brand_name");
 			
 			//setter cur brandId,brandName
-			$("#brandId").val(brandId) ;
-			$("#brandName").val(brandName) ;
+			$("#bId").val(brandId) ;
+			$("#bName").val(brandName) ;
 		});
 		
 	}

@@ -143,6 +143,7 @@ a {
 	width: 1rem; height: 1rem;
 }
 
+/*--Not used -start --*/
 /* brand */
 .container-line {
 	margin: 10% auto 7%; font-size: 1rem; color: #2a378f;
@@ -163,4 +164,32 @@ a {
 .container-search-btn{
 	width: 90%; height: 1.7rem; line-height: 1.7rem; background: #81acea; border-radius: 25px; color: white; font-size: 1rem; margin-top: 10%;
 }
+/*--Not used -end --*/
+
+/*search Result sucess*/
+.container-search-success-brand {
+	width: 20%; float: left; height: 1.5rem; border: 1px solid #eaeaea; border-bottom: 0; text-align: center; line-height: 1.5rem; margin-top: 15%; font-size: 0.7rem;
+}
+.container-search-success-brand-line {
+	width: 80%; float: left; height: 1.5rem; margin-top: 15%; border-bottom: 1px solid #eaeaea; border-right: 0;
+}
+.container-search-success-result-img-div {
+	width: 100%; float: left; border: 1px solid #eaeaea; border-top: 0;
+}
+
+.container-search-success-result-div {
+	width: 100%; float: left; height: 2rem; border: 1px solid #eaeaea; border-top: 0; line-height: 2rem;
+}
+.container-search-success-result-img-div img {
+	width: 100% ;
+}
+
+.container-search-success-result-div div {
+	float: left; font-size: 0.7rem;
+}
+
+.container-search-success-result-div div img {
+	height: 0.7rem;
+}
+
 

@@ -27,7 +27,7 @@
 		//ajax 查询数据
 		var url = baseProjectPath+"/query" ;
 		var data = {} ;
-		data["searchContent"] = searchContent ;
+		data["originalContent"] = searchContent ;
 		data["userToken"] = userToken ;
 		data["brandId"] = brandId ;
 		data["brandName"] = brandName ;
@@ -46,10 +46,14 @@
 		//ajax
 		$.post(url,data,function(data){
 			if(!isEmpty(data)) { //成功，显示
-				alert("---------");
+				if (!isEmpty(data.result)) {
+					var template = $.templates("#scoreCountyPage");
+					htmlOutput = template.render(data.result);
+				}
 			} else { //error，给提示
 				
 			}
+			$("#search-success-error-code-match").html(htmlOutput);
 		});
 		
 	}
@@ -139,13 +143,19 @@
 	 */
 	function initURLParams() {
 		var arrSelectorKeys = new Array() ;
-		arrSelectorKeys[0] = "userToken" ;
-		arrSelectorKeys[1] = "searchContent" ;
-		arrSelectorKeys[2] = "brandId" ;
-		arrSelectorKeys[3] = "brandName" ;
+		arrSelectorKeys[0] = "uid" ;
+		arrSelectorKeys[1] = "key" ;
+		arrSelectorKeys[2] = "bId" ;
+		arrSelectorKeys[3] = "bName" ;
 		arrSelectorKeys[4] = "lng" ;
 		arrSelectorKeys[5] = "lat" ;
 		renderHiddenParamsByArray(arrSelectorKeys, ID_TYPE) ;
+		
+		var addrVal = getURLParamVal(tmpSelectorKey);
+		if(isEmpty(addrVal)){
+			return ;
+		}
+		$(".search-context-input").val(addrVal); //初始化输入框
 	}
 	
 	function brandInitAndChange(){
