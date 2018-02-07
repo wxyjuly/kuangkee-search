@@ -63,9 +63,13 @@ public class ProfessionController {
 	 */
 	@RequestMapping(value="/queryProfList")
 	public KuangkeeResult qryProfList(
+			UserSearchLogReq searchReq,
 			@RequestParam(defaultValue="1")Integer page, 
 			@RequestParam(defaultValue="10")Integer rows,
 			HttpServletRequest request) {
+		
+		String uId = searchReq.getTokenId() ; //校验用户是否登陆
+		
 		List<Article> professions ;
 		try {
 //			searchResult = articleSearchService.search(qryStr, page, rows);

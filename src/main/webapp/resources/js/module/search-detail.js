@@ -37,7 +37,6 @@
 	}
 	
 	function loadArticleDetail() {
-		
 		var articleId = $('#articleId').val();
 		var uId = $('#uId').val();
 		var bId = $('#bId').val();
@@ -62,6 +61,42 @@
 					var template = $.templates("#article-detail-data");
 					htmlOutput = template.render(beans);
 					$("#article-detail-div").html(htmlOutput);
+					showDivByResult("success-flag") ;
+					
+				} else {
+					showErrorFlag = true ;
+				}
+				
+			} else { //error，给提示
+				showErrorFlag = true ;
+			}
+			
+			if(showErrorFlag==true){
+				showDivByResult("error-flag") ;
+			}
+		});
+	}
+	
+	
+	function loadProfessionDetail() {
+		var uId = $('#uId').val();
+		//ajax 查询数据
+		var url = baseProjectPath+"/queryProfList" ;
+		var data = {} ;
+		data["userToken"] = uId ;
+		//ajax
+		$.post(url,data,
+				function(data){
+			if(!isEmpty(data)
+					&&('000000'==data.status||'0'==data.status)) { //成功，显示
+				
+				var showErrorFlag = false ;
+				var beans = data.result ; 
+				if (!isEmpty(beans)) {
+					var htmlOutput ;
+					var template = $.templates("#profession-list-data");
+					htmlOutput = template.render(beans);
+					$("#profession-list-div").html(htmlOutput);
 					showDivByResult("success-flag") ;
 					
 				} else {
