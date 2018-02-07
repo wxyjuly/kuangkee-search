@@ -5,114 +5,86 @@
  */
 /* 通用部分 */
 body {
-	"font-family: &amp; #39;Microsoft Yahei&amp;#39;,&amp;#39;微软雅黑&amp;#39;,Arial,&amp;#39;Hiragino Sans GB&amp;#39;,&amp;#39;宋体&amp;#39;,&amp;#39;Helvetica Neue&amp;#39;,Helvetica,sans-serif;"
+	"font-family: &#39;Microsoft Yahei&#39;,&#39;微软雅黑&#39;,Arial,&#39;Hiragino Sans GB&#39;,&#39;宋体&#39;,&#39;Helvetica Neue&#39;,Helvetica,sans-serif;"
 }
 
-.active div {
+.active div{
 	border: 2px solid #7A67EE !important;
 }
-
 a {
-	text-decoration: none !important;
+	text-decoration:none !important;
 }
 
 /*兼容性设置*/
-@media only screen and (max-width: 1080px) , only screen and
-	(max-device-width:1080px) {
-	html, body {
-		font-size: 67.5px;
-	}
+@media only screen and (max-width: 1080px), only screen and (max-device-width:1080px) {
+    html,body {
+        font-size:67.5px;
+    }
 }
-
-@media only screen and (max-width: 960px) , only screen and
-	(max-device-width:960px) {
-	html, body {
-		font-size: 60px;
-	}
+@media only screen and (max-width: 960px), only screen and (max-device-width:960px) {
+    html,body {
+        font-size:60px;
+    }
 }
-
-@media only screen and (max-width: 800px) , only screen and
-	(max-device-width:800px) {
-	html, body {
-		font-size: 50px;
-	}
+@media only screen and (max-width: 800px), only screen and (max-device-width:800px) {
+    html,body {
+        font-size:50px;
+    }
 }
-
-@media only screen and (max-width: 720px) , only screen and
-	(max-device-width:720px) {
-	html, body {
-		font-size: 45px;
-	}
+@media only screen and (max-width: 720px), only screen and (max-device-width:720px) {
+    html,body {
+        font-size:45px;
+    }
 }
-
-@media only screen and (max-width: 640px) , only screen and
-	(max-device-width:640px) {
-	html, body {
-		font-size: 40px;
-	}
+@media only screen and (max-width: 640px), only screen and (max-device-width:640px) {
+    html,body {
+        font-size:40px;
+    }
 }
-
-@media only screen and (max-width: 600px) , only screen and
-	(max-device-width:600px) {
-	html, body {
-		font-size: 37.5px;
-	}
+@media only screen and (max-width: 600px), only screen and (max-device-width:600px) {
+    html,body {
+        font-size:37.5px;
+    }
 }
-
-@media only screen and (max-width: 540px) , only screen and
-	(max-device-width:540px) {
-	html, body {
-		font-size: 33.75px;
-	}
+@media only screen and (max-width: 540px), only screen and (max-device-width:540px) {
+    html,body {
+        font-size:33.75px;
+    }
 }
-
-@media only screen and (max-width: 480px) , only screen and
-	(max-device-width:480px) {
-	html, body {
-		font-size: 30px;
-	}
+@media only screen and (max-width: 480px), only screen and (max-device-width:480px) {
+    html,body {
+        font-size:30px;
+    }
 }
-
-@media only screen and (max-width: 414px) , only screen and
-	(max-device-width:414px) {
-	html, body {
-		font-size: 25.875px;
-	}
+@media only screen and (max-width: 414px), only screen and (max-device-width:414px) {
+    html,body {
+        font-size:25.875px;
+    }
 }
-
-@media only screen and (max-width: 400px) , only screen and
-	(max-device-width:400px) {
-	html, body {
-		font-size: 25px;
-	}
+@media only screen and (max-width: 400px), only screen and (max-device-width:400px) {
+    html,body {
+        font-size:25px;
+    }
 }
-
-@media only screen and (max-width: 375px) , only screen and
-	(max-device-width:375px) {
-	html, body {
-		font-size: 23.4375px;
-	}
+@media only screen and (max-width: 375px), only screen and (max-device-width:375px) {
+    html,body {
+        font-size:23.4375px;
+    }
 }
-
-@media only screen and (max-width: 360px) , only screen and
-	(max-device-width:360px) {
-	html, body {
-		font-size: 22.5px;
-	}
+@media only screen and (max-width: 360px), only screen and (max-device-width:360px) {
+    html,body {
+        font-size:22.5px;
+    }
 }
-
-@media only screen and (max-width: 320px) , only screen and
-	(max-device-width:320px) {
-	html, body {
-		font-size: 20px;
-	}
+@media only screen and (max-width: 320px), only screen and (max-device-width:320px) {
+    html,body {
+        font-size:20px;
+    }
 }
-
-@media only screen and (max-width: 240px) , only screen and
-	(max-device-width:240px) {
-	html, body {
-		font-size: 15px;
-	}
+@media only screen and (max-width: 240px), only screen and (max-device-width:240px) {
+    html,body {
+        font-size:15px;
+    }
 }
 
 /* 内容部分  */
@@ -192,8 +164,9 @@ a {
 	height: 0.7rem;
 }
 
-.error-code-style {
-	margin: 10% auto 7%; font-size: 0.7rem; color: #C6C6C6; text-align: center;
+/* professinal start */
+.class-line-header {
+	margin: 7% auto 7%;font-size: 0.8rem;color: #2a378f;text-align: center;
 }
 
 /* professinal start   */
@@ -247,3 +220,7 @@ a {
 	margin-left: 20%; margin-top: 5px; color: gray; font-size: 0.75rem;
 }
 /* professinal end */
+
+.error-code-style {
+	margin: 10% auto 7%; font-size: 0.7rem; color: #C6C6C6; text-align: center;
+}

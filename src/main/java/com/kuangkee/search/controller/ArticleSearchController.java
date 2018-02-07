@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,8 +23,6 @@ import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
 import com.kuangkee.common.utils.exception.ExceptionUtil;
 import com.kuangkee.search.pojo.Article;
 import com.kuangkee.search.pojo.UserSearchLog;
-import com.kuangkee.search.pojo.vo.UserInfo;
-import com.kuangkee.search.service.intefacepackage.IUserService;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
@@ -94,10 +91,11 @@ public class ArticleSearchController {
 //			}
 //		}
 		
-		SearchResult<Article> searchResult = null;
+		SearchResult<?> searchResult = null;
 		try {
 //			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
 			searchResult = articleSearchService.search(qryStr, page, rows);
+			
 			searchReq.setSearchContent(qryStr); //设置实际查询值--需过滤掉特殊字符
 			searchReq.setIp(request.getRemoteHost());
 
@@ -139,5 +137,57 @@ public class ArticleSearchController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
+	 * search:查询核心业务. <br/>
+	 * 查询规则：
+	 * 1. 优先按照错误代码(只包含字母和数字)进行匹配
+	 * 2. 错误代码无法匹配，再通过文章正文内容进行匹配
+	 * 若两者均无法匹配，给出一些提示
+	 * @author Leon Xi
+	 * @param qryStr
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	@RequestMapping(value="/qryArticleDetail")
+	public KuangkeeResult articleDetail(
+//			:TODO Bean无法绑定问题,通过$(post)
+			UserSearchLogReq searchReq,
+			HttpServletRequest request) {
+		String articleId = searchReq.getArticleId() ;
+		String uId = searchReq.getTokenId() ;
+		//查询条件不能为空
+		if (MatchUtil.isEmpty(articleId)
+				||MatchUtil.isEmpty(uId)) {
+			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
+		}
+		Article article = new Article() ;
+		
+		try {
+			article.setArticleId(Integer.parseInt(articleId));
+		} catch (NumberFormatException e1) {
+			e1.printStackTrace();
+			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e1));
+		}
+		boolean flag = true ; //查询结果
+		Article art = null ;
+		try {
+			art = articleSearchService.qryArticleDetail(article);
+		} catch (Exception e) {
+			e.printStackTrace();
+			flag = false ;
+		}
+		if(MatchUtil.isEmpty(art)) {
+			flag = false ;
+		}
+		if(flag) {
+			return KuangkeeResult.ok(art);
+		} else {
+			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.DB_QUERY_EMPTY_MSG);
+		}
+	}
+	
 	
 }

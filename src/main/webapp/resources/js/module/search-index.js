@@ -7,9 +7,10 @@
 	/**
 	 * :ToDO -> 获取定位存在bug 
 	 * 获取并显示定位，参数存放在
-	 * lng ， lat 隐藏域
+	 * lng , lat 隐藏域
 	 * @returns
 	 */
+	/**
 	function getAndSetGeo(){
 		//get geolocation-获取地理位置
 		var geolocation = new BMap.Geolocation();
@@ -70,20 +71,24 @@
 			enableHighAccuracy : true
 		});
 	}
+	*/
 	
-	function sub() {
+	function subRedirect() {
 		var key = $(".search-context-input").val();
-		if (isEmpty(searchContent)) {
+		if (isEmpty(key)) {
 			alert('请先输入搜索内容');
 			return false;
 		}
-		var brandId = $('#bId').val();
-		var brandName = $('#bName').val();
+		var uId= $('#uId').val() ;
+		var bId = $('#bId').val();
+		var bName = $('#bName').val();
 		var lng = $('#lng').val();
 		var lat = $('#lat').val();
 		
 		location.href = "./search-result.html?"
-				+"key="
+				+"uId="
+				+ uId
+				+"&key="
 				+ key
 				+ "&bId="
 				+ bId
@@ -99,19 +104,25 @@
 	 * 按照数组中的值，批量初始化隐藏域
 	 * @returns
 	 */
-	function initURLParams() {
+	function initParams() {
 		var arrSelectorKeys = new Array() ;
 		arrSelectorKeys[0] = "uId" ;
-		arrSelectorKeys[1] = "bId" ;
-		arrSelectorKeys[2] = "bName" ;
-		arrSelectorKeys[3] = "lng" ;
-		arrSelectorKeys[4] = "lat" ;
+		arrSelectorKeys[1] = "key" ;
+		arrSelectorKeys[2] = "bId" ;
+		arrSelectorKeys[3] = "bName" ;
+		arrSelectorKeys[4] = "lng" ;
+		arrSelectorKeys[5] = "lat" ;
 		renderHiddenParamsByArray(arrSelectorKeys, ID_TYPE) ;
+		
+		var addrVal = getURLParamVal(arrSelectorKeys[1]);
+		if(isEmpty(addrVal)){
+			return ;
+		}
+		$(".search-context-input").val(addrVal); //初始化输入框
 	}
 	
 	function brandInitAndChange(){
 		//init first
-		
 		//change brand cells
 		$(".container-brand-outter-div").click(function(){
 			var curBrandDiv = $(this);

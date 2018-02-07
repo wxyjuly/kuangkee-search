@@ -1,4 +1,6 @@
 var baseProjectPath = "/kuangkee-search" ;
+var IMG_PRE_URL = "http://127.0.0.1:8080/kuangkee-search/resources/images/" ;	
+
 
 //选择器类型
 var CLASS_TYPE = "CLASS_TYPE" ;
@@ -58,6 +60,37 @@ function setHtmlUrlTimestamps() {
 		}
 	})
 }
+
+/**
+ * 为每个页面href添加指定，变量对应数据
+ * @private
+ */
+function setParam2Href(paramKey,paramVal) {
+	
+	if(isEmpty(paramKey)||isEmpty(paramVal)){
+		return ;
+	}
+	
+	$('a[href]').each(function() {
+		var href = $(this).attr('href');
+		var paramIndexVal = paramKey+'=' ;
+		//判断url不为# 或者 javascript:void(0)
+		if (href.length > 1 && href.indexOf('javascript') == -1) {
+			//若当前url已经加入了时间戳，去掉当前加入的时间戳
+			if (href.indexOf(paramIndexVal) != -1) {
+				var idx = href.indexOf(paramIndexVal);
+				href = href.substring(0, idx - 1);
+			}
+			//若当前url已带有参数采用& 未带有参数采用?
+			if (href.indexOf('?') != -1) {
+				$(this).attr('href', href + '&'+ paramIndexVal + paramVal);
+			} else {
+				$(this).attr('href', href + '?'+ paramIndexVal + paramVal);
+			}
+		}
+	})
+}
+
 /**
  * 获取时间戳
  * @returns {number}
@@ -112,6 +145,39 @@ function renderHiddenParamsByArray(arrSelectorKeys, selectorType) {
 }
 
 /**
+ * 按照数组中的key，从隐藏域中批量插入数据
+ */
+function renderLocationParamsByArray(arrSelectorKeys, selectorType) {
+	if(isEmpty(arrSelectorKeys)
+			||isEmpty(selectorType)) {
+		return ;
+	}
+	var tmpSelectorKey ;
+	var addrVal ;
+	for(var i=0; i<arrSelectorKeys.length; i++){
+		tmpSelectorKey = arrSelectorKeys[i] ;
+		if(isEmpty(tmpSelectorKey)){
+			continue ;
+		}
+		addrVal = getAttr(selectorType,tmpSelectorKey);
+		if(isEmpty(addrVal)){
+			continue ;
+		}
+		
+		var appendData ;
+		if(CLASS_TYPE==selectorType){
+			appendData = $('.'+tmpSelectorKey).val();
+		} else if(ID_TYPE==selectorType){
+			appendData = $('#'+tmpSelectorKey).val();
+		}
+		if(isEmpty(appendData)){
+			continue ;
+		}
+		setParam2Href(tmpSelectorKey,appendData) ;
+	}
+}
+
+/**
  * 校验JS元素是否为空
  * @param param
  * @returns
@@ -132,7 +198,7 @@ function isEmpty(param){
 function addKeyEnterPressBtn() {
 	$("body").keydown(function() {
 		if (event.keyCode == "13") {
-			sub();
+			subRedirect() ;
 		}
 	});
 }

@@ -1,10 +1,11 @@
 
 
 	$(function() {	//page init
+//		brandInitAndChange() ; 		
 		addKeyEnterPressBtn() ;
 		initParams() ;
 		redirectSearchIndex() ;
-		sub(2) ; //初始化提交搜索
+		sub() ; //初始化提交搜索
 	});
 	
 	
@@ -35,8 +36,49 @@
 				+ lat;
 	}
 	
+	function loadArticleDetail() {
+		
+		var articleId = $('#articleId').val();
+		var uId = $('#uId').val();
+		var bId = $('#bId').val();
+		var bName = $('#bName').val();
+		var lng = $('#lng').val();
+		var lat = $('#lat').val();
+		
+		//ajax 查询数据
+		var url = baseProjectPath+"/qryArticleDetail" ;
+		var data = {} ;
+		data["articleId"] = articleId ;
+		data["userToken"] = uId ;
+		//ajax
+		$.post(url,data,function(data){
+			if(!isEmpty(data)
+					&&('000000'==data.status||'0'==data.status)) { //成功，显示
+				
+				var showErrorFlag = false ;
+				var beans = data.result ; 
+				if (!isEmpty(beans)) {
+					var htmlOutput ;
+					var template = $.templates("#article-detail-data");
+					htmlOutput = template.render(beans);
+					$("#article-detail-div").html(htmlOutput);
+					showDivByResult("success-flag") ;
+					
+				} else {
+					showErrorFlag = true ;
+				}
+				
+			} else { //error，给提示
+				showErrorFlag = true ;
+			}
+			
+			if(showErrorFlag==true){
+				showDivByResult("error-flag") ;
+			}
+		});
+	}
 	
-	function sub(type) {
+	function sub() {
 		var key ;
 		if(1==type) {
 			key = $(".search-context-input").val();
@@ -76,8 +118,8 @@
 					var template = $.templates("#search-success-errorcode-match-js");
 					htmlOutput = template.render(beans);
 					$("#search-success-errorcode-match-div").html(htmlOutput);
-					setAppendLocationParams(); //所有href添加对应参数
-					$(".container-search-success-brand").html($('#bName').val()) ;
+					setParam2Href('uId',$('#uId').val()); //所有href添加对应参数
+					$(".container-search-success-brand").html($('#bName').val()) ; //品牌名
 					showDivByResult("success-flag") ;
 					
 				} else {
@@ -92,23 +134,7 @@
 				showDivByResult("error-flag") ;
 			}
 		});
-		
 	}
-	
-	/**
-	 * 设置需要拼接地址栏的变量
-	 * @returns
-	 */
-	function setAppendLocationParams() {
-		var arrSelectorKeys = new Array() ;
-		arrSelectorKeys[0] = "uId" ;
-		arrSelectorKeys[1] = "bId" ;
-		arrSelectorKeys[2] = "bName" ;
-		arrSelectorKeys[3] = "lng" ;
-		arrSelectorKeys[4] = "lat" ;
-		renderLocationParamsByArray(arrSelectorKeys, ID_TYPE) ;
-	}
-	
 	
 	/**
 	 * 显示隐藏，大的域
@@ -212,7 +238,7 @@
 	function initParams() {
 		var arrSelectorKeys = new Array() ;
 		arrSelectorKeys[0] = "uId" ;
-		arrSelectorKeys[1] = "key" ;
+		arrSelectorKeys[1] = "articleId" ;
 		arrSelectorKeys[2] = "bId" ;
 		arrSelectorKeys[3] = "bName" ;
 		arrSelectorKeys[4] = "lng" ;
