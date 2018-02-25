@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kuangkee.common.pojo.KuangkeeResult;
+import com.kuangkee.common.pojo.req.ArticleReq;
 import com.kuangkee.common.pojo.req.UserSearchLogReq;
 import com.kuangkee.common.utils.SearchResult;
 import com.kuangkee.common.utils.check.MatchUtil;
+import com.kuangkee.common.utils.check.QueryStrParser;
 import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
 import com.kuangkee.common.utils.exception.ExceptionUtil;
+import com.kuangkee.search.pojo.Account;
 import com.kuangkee.search.pojo.Article;
 import com.kuangkee.search.pojo.UserSearchLog;
+import com.kuangkee.search.util.AccountSession;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
@@ -56,7 +60,7 @@ public class ArticleSearchController {
 	 * 查询规则：
 	 * 1. 优先按照错误代码(只包含字母和数字)进行匹配
 	 * 2. 错误代码无法匹配，再通过文章正文内容进行匹配
-	 * 若两者均无法匹配，给出一些提示
+	 *    若两者均无法匹配，给出一些提示
 	 * @author Leon Xi
 	 * @param qryStr
 	 * @param page
@@ -71,40 +75,60 @@ public class ArticleSearchController {
 			@RequestParam(defaultValue="10")Integer rows,
 			HttpServletRequest request) {
 		
-		String qryStr = searchReq.getOriginalContent() ;
+		String originalContent = searchReq.getOriginalContent() ;
 		//查询条件不能为空
-		if (StringUtils.isBlank(qryStr)) {
+		if (StringUtils.isBlank(originalContent)) {
 			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
 		}
-		//bean copy from userInfo Inteface
-		if("true".equals(SEARCH_LOGIN_ENABLE)) {
-			
-		}
 		
-//		String uId = searchReq.getTokenId() ;
-//		if(!MatchUtil.isEmpty(uId)) {
-//			try {
-//				UserInfo userInfo = userServiceImp.getUserInfoFromInteface(uId) ;
-//			} catch (BeansException e) {
-//				log.error("搜索用户数据，读取接口或者拷贝失败");
-//				e.printStackTrace();
-//			}
-//		}
+		//是否登陆才能搜索
+		long uId = searchReq.getUserId() ;
+		Account account = new AccountSession().getAccount(request, uId) ;
+		
+		if (MatchUtil.isEmpty(account)) { //找不到用户，非法登陆
+			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.USER_LOGGING_ERROR);
+		}
 		
 		SearchResult<?> searchResult = null;
 		try {
-//			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");
-			searchResult = articleSearchService.search(qryStr, page, rows);
+			String qryStr = originalContent ;
+//					QueryStrParser.trimSpecialSymbol(originalContent) ; //替换特殊字符
+			String searchStatus = SearchResult.SearchStatus.NOT_MATCHED_SEARCH ; //匹配结果 
 			
-			searchReq.setSearchContent(qryStr); //设置实际查询值--需过滤掉特殊字符
-			searchReq.setIp(request.getRemoteHost());
-
-			String searchStatus = SearchResult.SearchStatus.NOT_MATCHED_SEARCH ;
+//			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");  //转码
+			boolean qryStrFlag = QueryStrParser.checkStrIsNumOrAlphabet(qryStr) ; //搜索内容，只包含字母和数字
 			
-			if(!MatchUtil.isEmpty(searchStatus)) {
-				searchStatus = searchResult.getSearchStatus() ;
+			if(qryStrFlag) { // 只包含字符串或者数字，直接查询数据库error_code
+				log.info("qry info[param:{},page:{},rows{}]", qryStr, page, rows);
+				searchResult = articleSearchService.searchArticleListFromDBByPage(qryStr, page, rows) ;
 			} 
-			searchReq.setIsMatch(searchStatus);
+			boolean firstSearchResutIsNullFlag = true ; //第一步搜索结果是否有值，有值返回false,否则返回true
+			if(!MatchUtil.isEmpty(searchResult) 
+					&& !MatchUtil.isEmpty(searchResult.getRecordCount())
+					&& searchResult.getRecordCount()>0) {
+				firstSearchResutIsNullFlag = false ; //有值
+				searchStatus = SearchResult.SearchStatus.ERROR_CODE_MATCHED_SEARCH ;
+			}
+			//1. 查询关键字包含字母、数字之外内容；  或
+			//2. 第一步未搜索通过errorCode没有值 
+			if(!qryStrFlag && firstSearchResutIsNullFlag) { // 查询结果为空 或 前一步没有查询到值
+				searchResult = articleSearchService.searchArticleListFromSolrByPage(qryStr, page, rows) ;
+				if(!MatchUtil.isEmpty(searchResult)
+						&& !MatchUtil.isEmpty(searchResult.getRecordCount())
+						&& searchResult.getRecordCount()>0) {
+					searchStatus = SearchResult.SearchStatus.ERROR_CODE_MATCHED_SEARCH ;
+				} 
+			}
+			
+			searchReq.setIsMatch(searchStatus) ;
+			searchReq.setOriginalContent(originalContent);
+			searchReq.setSearchContent(qryStr) ; //设置实际查询值--需过滤掉特殊字符
+			searchReq.setIp(request.getRemoteHost()) ;
+			
+			searchReq.setTokenId(account.getOpenid()); //openId
+			searchReq.setUserId(account.getId());
+			searchReq.setUserName(account.getNickname());
+			searchReq.setPhone(account.getPhone());
 			
 			saveUserSearchLog(searchReq) ; //save search log
 			
@@ -113,6 +137,40 @@ public class ArticleSearchController {
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
 		}
 		return KuangkeeResult.ok(searchResult);
+	}
+	
+	/**
+	 * 
+	 * getArticleDetail: 获取文章明细数据，通过Article_Id. <br/>
+	 * @author Leon Xi
+	 * @param searchReq
+	 * @param page
+	 * @param rows
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/articleDetail")
+	public KuangkeeResult getArticleDetail(ArticleReq articleReq,
+			HttpServletRequest request) {
+		
+		//校验是否登陆，并且提示重定向到登陆页面
+		
+		//文章id不能为空
+		if (!MatchUtil.isEmpty(articleReq) 
+				&& MatchUtil.isEmpty(articleReq.getArticleId())) {
+			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
+		}
+		Article articleResult = null;
+		try {
+			Article article = new Article() ;
+			BeanUtils.copyProperties(articleReq, article);
+			articleResult = articleSearchService.qryArticleDetail(article);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
+		}
+		return KuangkeeResult.ok(articleResult);
 	}
 	
 	/**
@@ -126,12 +184,11 @@ public class ArticleSearchController {
 			UserSearchLog record = new UserSearchLog() ;
 			//bean copy from req
 			BeanUtils.copyProperties(searchReq, record);
-			
 			//add different info
 			record.setCreateTime(new Date());
 			record.setUpdateTime(new Date());
 			
-			log.error("record:->"+record);
+			log.info("record:->{}",record);
 			userSearchLogService.insertUserSearchLog(record) ;
 		} catch (BeansException e) {
 			e.printStackTrace();
@@ -188,6 +245,5 @@ public class ArticleSearchController {
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.DB_QUERY_EMPTY_MSG);
 		}
 	}
-	
 	
 }

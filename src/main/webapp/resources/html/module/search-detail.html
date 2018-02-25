@@ -35,6 +35,7 @@
 	</div>
 
     <div class="container success-flag" id="article-detail-div">
+
     </div>
     
 	<!-- search no result -->
@@ -71,7 +72,10 @@
 				</div>
 				<div class="professional-container-info-phone">
 					<span>
-						<a href="http://www.fonang.com/app/index.php?i=26&amp;c=entry&amp;money=0.00&amp;servicename=%E7%8E%8B%E6%95%8F%E8%BF%9B&amp;serviceid=88&amp;do=payphone&amp;m=wx_search">查看号码</a>
+						<a href="http://www.fonang.com/app/index.php?
+						i=26&amp;c=entry&amp;money=0.00&amp;
+						servicename=%E7%8E%8B%E6%95%8F%E8%BF%9B&amp;
+						serviceid=88&amp;do=payphone&amp;m=wx_search">查看号码</a>
 					</span>
 				</div>
 				<div style="clear: both;"></div>
@@ -82,13 +86,20 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="container error-flag" style="display:none;">
+			<img class="center-block" id="searchimg"
+				src="../../img/module/iF3XFc86qfBDcfzzD0FiTCCfbz36c6.jpg"
+				style="margin: 0 auto 1%; width: 92%;">
+			<div class="center-block"
+				style="margin: 10% auto 7%; font-size: 0.7rem; color: #C6C6C6; text-align: center;">查询出错,请换个试一试</div>
+		</div>
+		
 	</div>
 	
-		<!-- 滑动分页，效果：http://zixuephp.net/article-181.html -->
-		<!-- 记录初始化的页数，now为当前页，num为总页数，这个数值的设置是通过php获取分页的时候的总页数 -->
-		<div class="caseud error-code-style" now="1" num="2">
-		    <a href="javascript:void(0);">--我们是有底线的--</a>    
-		</div>
+	<div class="container success-flag" id="search-success-errorcode-match-div" now="1" num="2">
+		<a href="javascript:void(0);">--我们是有底线的--</a>
+	</div>		
 
 <script id="article-detail-data" type="text/x-jsrender">
 	<div class="class-line-header">───&nbsp;故障代码【{{:errorCode}}】&nbsp;───</div>
@@ -100,6 +111,41 @@
 </script>
 
 <script id="profession-list-data" type="text/x-jsrender">
+</script>
+
+<script id="search-success-errorcode-match-js" type="text/x-jsrender">
+{{for}}
+	{{if #getIndex() == 0}}
+		<div class="container-search-success-brand"></div>
+		<div class="container-search-success-brand-line"></div>
+	{{/if}}
+  	<td class="mainTaskName_cell"></td>
+	<a href="search-detail.html?articleId={{:articleId}}">
+		<div class="container-search-success-result-img-div">
+			<img src="../../images/small/{{:imgSearchSmall}}">
+		</div>
+	</a>
+	<div class="container-search-success-result-div">
+		<a href="search-detail.html?articleId={{:articleId}}">
+			<div>
+				<span style="color: black;">&nbsp;&nbsp;参看故障排除方法&nbsp;&nbsp;请教专家&nbsp;&nbsp;</span>
+				<img src="../../img/module/turn.png">
+				<span style="color: #f05a28; font-size: 0.7rem;">戳我&nbsp;</span>
+			</div>
+		</a>
+	</div>
+{{/for}}
+</script>
+ 
+<script id="article-detail-success-div" type="text/x-jsrender">
+ 	<div style="width: 100%;color: gray;">
+		<p>
+			<img src="../../images/big/1.png" width="100%">
+		</p>
+		<p>
+			<img src="../../images/big/1.png" width="100%">
+		</p>
+	</div>
 </script>
  
 </body>

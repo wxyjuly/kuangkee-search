@@ -1,12 +1,10 @@
 
-
 	$(function() {	//page init
 		addKeyEnterPressBtn() ;
 		initParams() ;
 		redirectSearchIndex() ;
 		sub(2) ; //初始化提交搜索
 	});
-	
 	
 	function subRedirect() {
 		var key = $(".search-context-input").val();

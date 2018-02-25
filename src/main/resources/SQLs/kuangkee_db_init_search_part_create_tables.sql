@@ -54,7 +54,7 @@ create table tb_user_search_log
 		comment '搜索用户ip',	
    create_time          datetime                       null
 		comment '创建时间（系统当前时间）;now()',
-   update_time          datetime                      null 
+   update_time          datetime                       null 
 		comment '最后修改时间'
 ) ;
 
@@ -76,7 +76,7 @@ create table tb_article
    title                varchar(256)                   null
 		comment '文章标题',
    sub_title            varchar(512)                   null
-		comment '子标题',
+		comment '错误简要说明',
    img_search_small     varchar(512)                   null
 		comment '文章搜索图片缩略图URL',
    img_content_big              varchar(512)           null
@@ -106,6 +106,7 @@ create table tb_article
 /*==============================================================*/
 /* Table: tb_article_desc    --文章明细信息[保存text大字段内容] */
 /*==============================================================*/
+/*
 create table tb_article_desc 
 (
    article_id           int                            not null
@@ -117,4 +118,4 @@ create table tb_article_desc
    update_time          datetime                       null
 		comment '修改时间'
 ) ;
-
+*/

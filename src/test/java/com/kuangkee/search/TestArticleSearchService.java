@@ -1,5 +1,7 @@
 package com.kuangkee.search ;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,19 +23,31 @@ public class TestArticleSearchService {
 	IArticleSearchService searchService ;
 	
 	/**
-	 * testSearch:查询服务. <br/>
+	 * testSearchSolr:查询服务,从Solr中查询数据. <br/>
 	 * @author Leon Xi
 	 * @throws Exception 
 	 */
 	@Test
 	public void testSearchSolr() throws Exception {
-		String qryStr = "手机" ;
+		String qryStr = "测试" ;
 		int page = 1 ;
 		int rows = 20 ;
 		log.info("----------> info");
-		SearchResult<Article> result = searchService.search(qryStr, page, rows) ;
+		SearchResult<Article> result = searchService.searchArticleListFromSolrByPage(qryStr, page, rows) ;
 		log.info("[查询结果]-->"+result.getResult());
-		System.out.println(result.getResult());
+		System.err.println(result.getResult());
+	}
+	
+	@Test
+	public void testSearchArticleListFromDBByPage() throws Exception {
+		String errorCode = "E" ;
+		int page = 1 ;
+		int rows = 20 ;
+		SearchResult<Article> result = searchService.searchArticleListFromDBByPage(errorCode, page, rows) ;
+		List<Article> articles = result.getResult();
+		for (Article article : articles) {
+			System.err.println(article.toString());
+		}
 	}
 
 }
