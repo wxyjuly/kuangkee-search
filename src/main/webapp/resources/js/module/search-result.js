@@ -55,7 +55,7 @@
 		var url = baseProjectPath+"/query" ;
 		var data = {} ;
 		data["originalContent"] = key ;
-		data["userToken"] = uId ;
+		data["userId"] = uId ;
 		data["brandId"] = bId ;
 		data["brandName"] = bName ;
 		data["longitude"] = lng ;

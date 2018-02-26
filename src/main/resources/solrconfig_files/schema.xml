@@ -1177,19 +1177,21 @@
 	<copyField source="item_category_name" dest="item_keywords"/>
 	<copyField source="item_desc" dest="item_keywords"/>  
 
-<field name="article_title" type="text_ik" indexed="true" stored="true"/>
-<field name="article_error_code" type="text_ik" indexed="true" stored="true"/>
-<field name="article_img_search_small" type="text_ik" indexed="true" stored="true"/>
-<field name="article_img_content_small" type="string" indexed="false" stored="true" />
-<field name="article_img_content_big" type="string" indexed="true" stored="true" />
-<field name="article_content" type="text_ik" indexed="true" stored="false" />
- 
-<field name="article_keywords" type="text_ik" indexed="true" stored="false" multiValued="true"/>
-<copyField source="article_title" dest="article_keywords"/>
-<copyField source="article_error_code" dest="article_keywords"/>
-<copyField source="article_img_search_small" dest="article_keywords"/>
-<copyField source="article_img_content_small" dest="article_keywords"/>
-<copyField source="article_img_content_big" dest="article_keywords"/>
-<copyField source="article_content" dest="article_keywords"/>
+	<field name="article_title" type="text_ik" indexed="true" stored="true"/>
+	<field name="article_error_code" type="text_ik" indexed="true" stored="true"/>
+	<field name="article_sub_title" type="text_ik" indexed="true" stored="true"/>
+	<field name="article_img_search_small" type="text_ik" indexed="true" stored="true"/>
+	<field name="article_img_content_small" type="string" indexed="false" stored="true" />
+	<field name="article_img_content_big" type="string" indexed="true" stored="true" />
+	<field name="article_content" type="text_ik" indexed="true" stored="false" />
+	 
+	<field name="article_keywords" type="text_ik" indexed="true" stored="false" multiValued="true"/>
+	<copyField source="article_title" dest="article_keywords"/>
+	<copyField source="article_error_code" dest="article_keywords"/>
+	<copyField source="article_sub_title" dest="article_keywords"/>
+	<copyField source="article_img_search_small" dest="article_keywords"/>
+	<copyField source="article_img_content_small" dest="article_keywords"/>
+	<copyField source="article_img_content_big" dest="article_keywords"/>
+	<copyField source="article_content" dest="article_keywords"/>
 	
 </schema>

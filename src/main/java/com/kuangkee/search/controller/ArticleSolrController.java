@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kuangkee.common.pojo.KuangkeeResult;
+import com.kuangkee.service.solr.IArticleSolrService;
 
 /**
  * 文章查询服务
@@ -19,16 +20,15 @@ import com.kuangkee.common.pojo.KuangkeeResult;
 public class ArticleSolrController {
 	
 	@Autowired
-//	private IArticleSolrService articleSolrService;
+	private IArticleSolrService articleSolrService;
 
 	/**
 	 * 导入商品数据到索引库
 	 */
-	@RequestMapping("/manager/importall")
+	@RequestMapping("/manager/importallArticle")
 	@ResponseBody
 	public KuangkeeResult importAllItems() {
-//		KuangkeeResult result = articleSolrService.importAllItems();
-//		return result;
-		return null ;
+		KuangkeeResult result = articleSolrService.importAllArticles2Solr() ;
+		return result;
 	}
 }

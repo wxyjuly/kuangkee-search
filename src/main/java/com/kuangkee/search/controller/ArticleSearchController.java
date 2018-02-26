@@ -21,12 +21,14 @@ import com.kuangkee.common.pojo.req.UserSearchLogReq;
 import com.kuangkee.common.utils.SearchResult;
 import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.check.QueryStrParser;
+import com.kuangkee.common.utils.constant.Constants;
 import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
 import com.kuangkee.common.utils.exception.ExceptionUtil;
+import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.pojo.Account;
 import com.kuangkee.search.pojo.Article;
 import com.kuangkee.search.pojo.UserSearchLog;
-import com.kuangkee.search.util.AccountSession;
+import com.kuangkee.service.IAccountService;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
@@ -51,8 +53,8 @@ public class ArticleSearchController {
 	@Autowired
 	private IUserSearchLogService userSearchLogService ;
 	
-//	@Autowired
-//	private IUserService userServiceImp;
+	@Autowired
+	private IAccountService accountService ;
 	
 	/**
 	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
@@ -82,8 +84,16 @@ public class ArticleSearchController {
 		}
 		
 		//是否登陆才能搜索
-		long uId = searchReq.getUserId() ;
-		Account account = new AccountSession().getAccount(request, uId) ;
+		long uId =-1 ;
+		try {
+			uId = searchReq.getUserId() ;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		Account account = null ;
+		if(-1 != uId) {
+			account = getAccount(request, uId) ;
+		}
 		
 		if (MatchUtil.isEmpty(account)) { //找不到用户，非法登陆
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.USER_LOGGING_ERROR);
@@ -149,7 +159,7 @@ public class ArticleSearchController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/articleDetail")
+	@RequestMapping(value="/articleDetail",method= {})
 	public KuangkeeResult getArticleDetail(ArticleReq articleReq,
 			HttpServletRequest request) {
 		
@@ -244,6 +254,28 @@ public class ArticleSearchController {
 		} else {
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.DB_QUERY_EMPTY_MSG);
 		}
+	}
+	
+	/**
+	 * 从session中获取用户
+	 * @param session
+	 * @return account
+	 */
+	@RequestMapping(value="/user")
+	public Account getAccount(HttpServletRequest request,
+			long uId) {
+		
+		Object sesAccount = SessionUtils.getSessionValue(request, Constants.SysConstant.ACOUNT) ;
+		Account account ;
+		if(MatchUtil.isEmpty(sesAccount)) { //session无值，从数据库获取，并放入session
+			account = accountService.getAccountByUId(uId) ;
+			
+			SessionUtils.setSessionValue(request, Constants.SysConstant.ACOUNT, account);
+			
+		} else { //session有值，直接转换
+			account = (Account) sesAccount ;
+		}
+		return account ;
 	}
 	
 }
