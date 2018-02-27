@@ -65,7 +65,7 @@ create table tb_user_search_log
 /*==============================================================*/
 create table tb_article
 (
-   article_id           int                            primary key auto_increment
+   article_id           bigint                         primary key auto_increment
 		comment '自增编号',
    brand_id             varchar(8)                     null
 		comment '品牌id',

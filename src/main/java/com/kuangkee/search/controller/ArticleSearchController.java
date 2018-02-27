@@ -233,7 +233,7 @@ public class ArticleSearchController {
 		Article article = new Article() ;
 		
 		try {
-			article.setArticleId(Integer.parseInt(articleId));
+			article.setArticleId(Long.parseLong(articleId));
 		} catch (NumberFormatException e1) {
 			e1.printStackTrace();
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e1));
