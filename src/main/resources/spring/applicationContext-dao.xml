@@ -20,6 +20,9 @@
 		<property name="driverClassName" value="${jdbc.driver}" />
 		<property name="maxActive" value="10" />
 		<property name="minIdle" value="5" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="1800" />
+
 	</bean>
 	<!-- 配置sqlsessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -28,6 +31,7 @@
 	</bean>
 	<!-- 配置扫描包，加载mapper代理对象 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.kuangkee.search.mapper.generate,com.kuangkee.search.mapper.artifact"></property>
+		<property name="basePackage"
+			value="com.kuangkee.search.mapper.generate,com.kuangkee.search.mapper.artifact"></property>
 	</bean>
 </beans>
