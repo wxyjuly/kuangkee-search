@@ -3,6 +3,7 @@ package com.kuangkee.search.controller;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,8 @@ public class OrderController {
 	@RequestMapping(value="/createOrder")
 	public KuangkeeResult saveOrder(
 			OrderReq orderReq,
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			HttpServletResponse response) {
 		
 		Long uId = orderReq.getuId() ; 
 		Long profId = orderReq.getpId() ;
@@ -80,7 +82,7 @@ public class OrderController {
 			BeanUtils.copyProperties(userInfo, order);
 			
 			order.setuName(userInfo.getNickname());
-			order.setPhone(userInfo.getPhone());
+			order.setuPhone(userInfo.getPhone());
 			
 			order.setCreateDate(new Date());
 			order.setUpdateDate(new Date());
@@ -90,10 +92,11 @@ public class OrderController {
 			//查询专家数据
 			log.info("getExpertById(profId)->{}",profId);
 			Expert expert = expertService.getExpertById(profId) ;
+			order.setPhone(expert.getPhone()); //手机号
 			
 			Integer price = expert.getPrice() ;
 			if(MatchUtil.isEmpty(price) 
-					&& price.equals(Integer.parseInt("0"))) { //0元，直接下单
+					|| price.equals(Integer.parseInt("0"))) { //0元，直接下单
 				order.setOrderStatus(OrderConst.ORDER_PAYED);
 				
 			} else { //TODO : 大于0元，需要微信支付
@@ -101,7 +104,7 @@ public class OrderController {
 				order.setOrderStatus(OrderConst.ORDER_UNPAYED);
 			}
 			//save order
-			log.info("saveOrderById(order)->{}",order);
+			
 			result = orderService.saveOrderById(order) ;
 		} catch (Exception e) {
 			e.printStackTrace();
