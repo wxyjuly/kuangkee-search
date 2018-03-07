@@ -93,7 +93,8 @@ public class OrderController {
 			log.info("getExpertById(profId)->{}",profId);
 			Expert expert = expertService.getExpertById(profId) ;
 			order.setPhone(expert.getPhone()); //手机号
-			
+			order.setuId(uId);
+			order.setpId(profId);
 			Integer price = expert.getPrice() ;
 			if(MatchUtil.isEmpty(price) 
 					|| price.equals(Integer.parseInt("0"))) { //0元，直接下单

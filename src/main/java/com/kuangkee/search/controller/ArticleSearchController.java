@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.solr.common.params.CommonParams.EchoParamStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -76,7 +75,7 @@ public class ArticleSearchController {
 //			:TODO Bean无法绑定问题,通过$(post)
 			UserSearchLogReq searchReq, 
 			@RequestParam(defaultValue="1")Integer page, 
-			@RequestParam(defaultValue="10")Integer rows,
+			@RequestParam(defaultValue="50")Integer rows,
 			HttpServletRequest request) {
 		
 		String originalContent = searchReq.getOriginalContent() ;
@@ -94,7 +93,7 @@ public class ArticleSearchController {
 		}
 		UserInfo account = null ;
 		if(-1 != uId) {
-			account = getAccount(request, searchReq, uId) ;
+			account = getAccount(request, searchReq, uId) ; //注册功能
 		} else {
 			//用户为空，抛异常
 			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.USER_LOGGING_ERROR);
@@ -270,10 +269,11 @@ public class ArticleSearchController {
 	public UserInfo getAccount(HttpServletRequest request, UserSearchLogReq searchReq,
 			long uId) {
 		
-		Object sesAccount = SessionUtils.getSessionValue(request, 
-				Constants.SysConstant.ACOUNT + "_"+  String.valueOf(uId)) ;
 		UserInfo userInfo = new UserInfo();
-		if(MatchUtil.isEmpty(sesAccount)) { //session无值，从数据库获取，并放入session
+		
+		Object userInfoSession = SessionUtils.getSessionValue(request, 
+				Constants.SysConstant.ACOUNT + "_"+  String.valueOf(uId)) ;
+		if(MatchUtil.isEmpty(userInfoSession)) { //session无值，从数据库获取，并放入session
 			Account account = accountService.getAccountByUId(uId) ;
 			
 			if(!MatchUtil.isEmpty(account)) {
@@ -284,10 +284,10 @@ public class ArticleSearchController {
 				userInfo.setLongitude(searchReq.getLongitude()) ;
 			}
 			SessionUtils.setSessionValue(request, 
-					Constants.SysConstant.ACOUNT + "_"+  String.valueOf(uId), account);
+					Constants.SysConstant.ACOUNT + "_"+  String.valueOf(uId), userInfo);
 			
 		} else { //session有值，直接转换
-			userInfo = (UserInfo) sesAccount ;
+			userInfo = (UserInfo) userInfoSession ;
 		}
 		return userInfo ;
 	}
