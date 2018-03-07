@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.kuangkee.common.utils.constant.Constants;
 import com.kuangkee.common.utils.session.SessionUtils;
-import com.kuangkee.search.pojo.Account;
+import com.kuangkee.search.pojo.vo.UserInfo;
 
 /**
  * ClassName:AccountSession:获取session值 <br/>
@@ -35,7 +35,7 @@ public class AccountSession {
 		return sesAccount ;
 	}
 
-	public static void setAccount(HttpServletRequest request, Account user) {
+	public static void setAccount(HttpServletRequest request, UserInfo user) {
 		request.getSession().setAttribute(Constants.SysConstant.ACOUNT, user);
 	}
 

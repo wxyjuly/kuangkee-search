@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.common.params.CommonParams.EchoParamStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +29,7 @@ import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.pojo.Account;
 import com.kuangkee.search.pojo.Article;
 import com.kuangkee.search.pojo.UserSearchLog;
+import com.kuangkee.search.pojo.vo.UserInfo;
 import com.kuangkee.service.IAccountService;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
@@ -90,9 +92,12 @@ public class ArticleSearchController {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		Account account = null ;
+		UserInfo account = null ;
 		if(-1 != uId) {
-			account = getAccount(request, uId) ;
+			account = getAccount(request, searchReq, uId) ;
+		} else {
+			//用户为空，抛异常
+			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, KuangKeeResultConst.USER_LOGGING_ERROR);
 		}
 		
 		if (MatchUtil.isEmpty(account)) { //找不到用户，非法登陆
@@ -261,21 +266,30 @@ public class ArticleSearchController {
 	 * @param session
 	 * @return account
 	 */
-	@RequestMapping(value="/user")
-	public Account getAccount(HttpServletRequest request,
+	@RequestMapping(value="/userSession")
+	public UserInfo getAccount(HttpServletRequest request, UserSearchLogReq searchReq,
 			long uId) {
 		
-		Object sesAccount = SessionUtils.getSessionValue(request, Constants.SysConstant.ACOUNT) ;
-		Account account ;
+		Object sesAccount = SessionUtils.getSessionValue(request, 
+				Constants.SysConstant.ACOUNT + "_"+  String.valueOf(uId)) ;
+		UserInfo userInfo = new UserInfo();
 		if(MatchUtil.isEmpty(sesAccount)) { //session无值，从数据库获取，并放入session
-			account = accountService.getAccountByUId(uId) ;
+			Account account = accountService.getAccountByUId(uId) ;
 			
-			SessionUtils.setSessionValue(request, Constants.SysConstant.ACOUNT, account);
+			if(!MatchUtil.isEmpty(account)) {
+				BeanUtils.copyProperties(account, userInfo);
+			}
+			if(!MatchUtil.isEmpty(searchReq)) {
+				userInfo.setLatitude(searchReq.getLatitude()) ;
+				userInfo.setLongitude(searchReq.getLongitude()) ;
+			}
+			SessionUtils.setSessionValue(request, 
+					Constants.SysConstant.ACOUNT + "_"+  String.valueOf(uId), account);
 			
 		} else { //session有值，直接转换
-			account = (Account) sesAccount ;
+			userInfo = (UserInfo) sesAccount ;
 		}
-		return account ;
+		return userInfo ;
 	}
 	
 }
