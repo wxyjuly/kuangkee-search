@@ -144,6 +144,9 @@ public class ArticleSearchController {
 			searchReq.setUserName(account.getNickname());
 			searchReq.setPhone(account.getPhone());
 			
+			searchReq.setLatitude(account.getLatitude());
+			searchReq.setLongitude(account.getLongitude());
+			
 			saveUserSearchLog(searchReq) ; //save search log
 			
 		} catch (Exception e) {
@@ -223,7 +226,7 @@ public class ArticleSearchController {
 	 * @return
 	 */
 	@RequestMapping(value="/qryArticleDetail")
-	public KuangkeeResult articleDetail(
+	public KuangkeeResult articleArticleDetail(
 //			:TODO Bean无法绑定问题,通过$(post)
 			UserSearchLogReq searchReq,
 			HttpServletRequest request) {
