@@ -86,8 +86,10 @@ public class ArticleSearchController {
 		
 		//是否登陆才能搜索
 		long uId =-1 ;
+		int uIdTmp = 0 ; //保存值
 		try {
 			uId = searchReq.getUserId() ;
+			uIdTmp = (int) uId ;
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -130,7 +132,7 @@ public class ArticleSearchController {
 				if(!MatchUtil.isEmpty(searchResult)
 						&& !MatchUtil.isEmpty(searchResult.getRecordCount())
 						&& searchResult.getRecordCount()>0) {
-					searchStatus = SearchResult.SearchStatus.ERROR_CODE_MATCHED_SEARCH ;
+					searchStatus = SearchResult.SearchStatus.CONTENT_MATCHED_SEARCH ;
 				} 
 			}
 			
@@ -140,7 +142,9 @@ public class ArticleSearchController {
 			searchReq.setIp(request.getRemoteHost()) ;
 			
 			searchReq.setTokenId(account.getOpenid()); //openId
-			searchReq.setUserId(account.getId());
+			
+			
+			searchReq.setUserId(uIdTmp);
 			searchReq.setUserName(account.getNickname());
 			searchReq.setPhone(account.getPhone());
 			
