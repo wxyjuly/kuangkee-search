@@ -27,7 +27,7 @@ import com.kuangkee.service.IExpertService;
 import com.kuangkee.service.IOrderService;
 
 /**
- * 专家Controller
+ * 订单Controller
  * ClassName: SearchController <br/>
  * date: 2018年1月20日 下午12:23:51 <br/>
  * @author Leon Xi
