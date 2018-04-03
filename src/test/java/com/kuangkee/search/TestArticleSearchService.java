@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.kuangkee.common.utils.SearchResult;
 import com.kuangkee.search.pojo.Article;
+import com.kuangkee.search.pojo.BrandVolvo;
+import com.kuangkee.service.IBrandVolvoService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,6 +23,9 @@ public class TestArticleSearchService {
 	
 	@Autowired
 	IArticleSearchService searchService ;
+	
+	@Autowired
+	IBrandVolvoService brandVolvoService ;
 	
 	/**
 	 * testSearchSolr:查询服务,从Solr中查询数据. <br/>
@@ -48,6 +53,30 @@ public class TestArticleSearchService {
 		for (Article article : articles) {
 			System.err.println(article.toString());
 		}
+	}
+	
+	/**
+	 * testQryBrandCartByPart:测试卡特的唯一查询，通过三段编码组合. <br/>
+	 * @author Leon Xi
+	 * @throws Exception
+	 */
+	@Test
+	public void testQryBrandCartByPart() throws Exception {
+		String mid = "36" ;
+		String cid = "95" ;
+		String fmi = "3" ;
+		
+		String errorCode = "" ;
+		String errorInfo = "" ;
+		SearchResult<BrandVolvo> result = brandVolvoService.qryBrandCartByPart(mid, cid, fmi) ;
+		List<BrandVolvo> res = result.getResult() ;
+		for (BrandVolvo brandVolvo : res) {
+			errorCode += brandVolvo.getErrorCode() + "\t\t\t";
+			errorInfo +=  brandVolvo.getTitle()+ "\t";
+		}
+		System.err.println(errorCode);
+		System.err.println(errorInfo);
+		
 	}
 
 }
