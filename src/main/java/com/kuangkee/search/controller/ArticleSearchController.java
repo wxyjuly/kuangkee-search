@@ -30,6 +30,7 @@ import com.kuangkee.search.pojo.Article;
 import com.kuangkee.search.pojo.UserSearchLog;
 import com.kuangkee.search.pojo.vo.UserInfo;
 import com.kuangkee.service.IAccountService;
+import com.kuangkee.service.IBrandVolvoService;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.solr.IArticleSearchService;
 
@@ -56,6 +57,9 @@ public class ArticleSearchController {
 	
 	@Autowired
 	private IAccountService accountService ;
+	
+	@Autowired
+	IBrandVolvoService brandVolvoService ;
 	
 	/**
 	 * http://127.0.0.1:8080/kuangkee-search/query?q=111
@@ -113,32 +117,55 @@ public class ArticleSearchController {
 			
 //			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");  //转码
 			boolean qryStrFlag = QueryStrParser.checkStrIsNumOrAlphabet(qryStr) ; //搜索内容，只包含字母和数字
-			
 			Integer brandId = searchReq.getBrandId() ;
 			String brandName = searchReq.getBrandName() ;
 			String brandCater = "卡特" ;
+			
+			if(brandId.equals(2) 
+					|| brandName.equals(brandCater)) { //卡特单独处理
+				qryStrFlag = true ;
+			}
 			
 			if(qryStrFlag) { // 只包含字符串或者数字，直接查询数据库error_code
 				log.info("qry info[param:{},page:{},rows{}]", qryStr, page, rows);
 				if(brandId.equals(2) 
 						|| brandName.equals(brandCater)) { //卡特的搜索，三个部分拼装
-					searchResult = null ; // TODO:实现搜索和拼接
+					String mid = "" ;
+					String cid = "" ;
+					String fmi = "" ;
+					String caterSpliter = "\\$\\$" ;
+					
+					try {
+						String[] caterSearch = qryStr.split(caterSpliter) ;
+						mid = caterSearch[0] ;
+						cid = caterSearch[1] ;
+						fmi = caterSearch[2] ;
+								 
+					} catch(Exception e) {
+						return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
+					}
+					if(MatchUtil.isEmpty(mid) 
+							|| MatchUtil.isEmpty(cid) 
+							|| MatchUtil.isEmpty(fmi)) { //三个搜索条件必须有值
+						return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, "卡特搜索条件录入不全，请重新录入...");
+					}
+					searchResult = brandVolvoService.qryBrandCartByPart(mid, cid, fmi) ;
 					
 				} else {
 					searchResult = articleSearchService.searchArticleListFromDBByPage(qryStr, page, rows) ;
 				}
-				
 			} 
-			boolean firstSearchResutIsNullFlag = true ; //第一步搜索结果是否有值，有值返回false,否则返回true
+			
+			boolean firstSearchResutIsNotNullFlag = false ; //第一步搜索结果是否有值，有值返回false,否则返回true
 			if(!MatchUtil.isEmpty(searchResult) 
 					&& !MatchUtil.isEmpty(searchResult.getRecordCount())
 					&& searchResult.getRecordCount()>0) {
-				firstSearchResutIsNullFlag = false ; //有值
+				firstSearchResutIsNotNullFlag = true ; //有值
 				searchStatus = SearchResult.SearchStatus.ERROR_CODE_MATCHED_SEARCH ;
 			}
 			//1. 查询关键字包含字母、数字之外内容；  或
-			//2. 第一步未搜索通过errorCode没有值 
-			if(!qryStrFlag && firstSearchResutIsNullFlag) { // 查询结果为空 或 前一步没有查询到值
+			//2. 第一步未搜索errorCode没有值 
+			if(!qryStrFlag || !firstSearchResutIsNotNullFlag) { // 查询结果为空 或 前一步没有查询到值
 				searchResult = articleSearchService.searchArticleListFromSolrByPage(qryStr, page, rows) ;
 				if(!MatchUtil.isEmpty(searchResult)
 						&& !MatchUtil.isEmpty(searchResult.getRecordCount())
