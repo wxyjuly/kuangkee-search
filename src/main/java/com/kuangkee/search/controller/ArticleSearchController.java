@@ -114,9 +114,20 @@ public class ArticleSearchController {
 //			qryStr = new String(qryStr.getBytes("iso8859-1"), "utf-8");  //转码
 			boolean qryStrFlag = QueryStrParser.checkStrIsNumOrAlphabet(qryStr) ; //搜索内容，只包含字母和数字
 			
+			Integer brandId = searchReq.getBrandId() ;
+			String brandName = searchReq.getBrandName() ;
+			String brandCater = "卡特" ;
+			
 			if(qryStrFlag) { // 只包含字符串或者数字，直接查询数据库error_code
 				log.info("qry info[param:{},page:{},rows{}]", qryStr, page, rows);
-				searchResult = articleSearchService.searchArticleListFromDBByPage(qryStr, page, rows) ;
+				if(brandId.equals(2) 
+						|| brandName.equals(brandCater)) { //卡特的搜索，三个部分拼装
+					searchResult = null ; // TODO:实现搜索和拼接
+					
+				} else {
+					searchResult = articleSearchService.searchArticleListFromDBByPage(qryStr, page, rows) ;
+				}
+				
 			} 
 			boolean firstSearchResutIsNullFlag = true ; //第一步搜索结果是否有值，有值返回false,否则返回true
 			if(!MatchUtil.isEmpty(searchResult) 
@@ -142,7 +153,6 @@ public class ArticleSearchController {
 			searchReq.setIp(request.getRemoteHost()) ;
 			
 			searchReq.setTokenId(account.getOpenid()); //openId
-			
 			
 			searchReq.setUserId(uIdTmp);
 			searchReq.setUserName(account.getNickname());
@@ -206,6 +216,8 @@ public class ArticleSearchController {
 			//bean copy from req
 			BeanUtils.copyProperties(searchReq, record);
 			//add different info
+			
+			record.setMerchantId(searchReq.getFrom());
 			record.setCreateTime(new Date());
 			record.setUpdateTime(new Date());
 			
