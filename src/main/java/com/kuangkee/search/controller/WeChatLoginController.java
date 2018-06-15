@@ -1,10 +1,5 @@
 package com.kuangkee.search.controller;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +17,6 @@ import com.kuangkee.common.utils.exception.ExceptionUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.search.util.Wechat_Constants;
 import com.kuangkee.service.IUserSearchLogService;
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 /**
  * 微信登陆Controller
@@ -95,6 +89,14 @@ public class WeChatLoginController {
 	}
 	
 	
+	/**
+	 * https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1472017492_58YV5
+	 * wx:(这里用一句话描述这个方法的作用). <br/>
+	 *
+	 * @author Leon Xi
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value="/wx")
 	public String wx(HttpServletRequest request) {
 		
@@ -103,7 +105,7 @@ public class WeChatLoginController {
 		String nonce = request.getParameter("nounce") ;
 		String echostr = request.getParameter("echostr") ;
 		String token = "wechat" ;
-		
+		log.info("echostr"+echostr);
 		if (MatchUtil.isEmpty(echostr)) {
 			echostr = "" ;
 		}

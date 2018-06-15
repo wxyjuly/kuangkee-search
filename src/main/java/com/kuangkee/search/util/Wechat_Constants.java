@@ -15,12 +15,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kuangkee.common.utils.constant.Constants;
-
+import com.kuangkee.common.utils.httpclient.HttpClientUtil;
+import com.kuangkee.common.utils.json.JsonUtils;
+import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey.Match;
 import com.kuangkee.common.pojo.req.UserSearchLogReq;
 import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.pojo.Account;
+import com.kuangkee.search.pojo.vo.AccessToken;
 import com.kuangkee.search.pojo.vo.UserInfo;
+import com.sun.tools.javah.TypeSignature;
 
 /**
  * ClassName:Wechat_Constants <br/>
@@ -30,6 +34,9 @@ import com.kuangkee.search.pojo.vo.UserInfo;
  * @see 	 
  */
 public class Wechat_Constants {
+	
+	//ACCESS_TOKEN
+	public static final String ACCESS_TOKEN = "access_token" ;
 	
 	//Wechat info
 	public static final String APP_ID = "wx506d706ee08ac22b" ;
@@ -80,6 +87,53 @@ public class Wechat_Constants {
 			userInfo = (UserInfo) userInfoSession ;
 		}
 		return userInfo ;
+	}
+	
+	/**
+	 * 
+	 * getAccessToken:获取token. <br/>
+	 *
+	 * @author Leon Xi
+	 * @param token
+	 * @return
+	 */
+	public static final Object getAccessToken(HttpServletRequest request) {
+		Object accessToken = SessionUtils.getSessionValue(request, ACCESS_TOKEN) ; 
+		
+		if(MatchUtil.isEmpty(accessToken)) {
+			refreshAccessToken(request) ; // 从新设置session
+			accessToken = getAccessToken(request);
+		}
+		return accessToken ;
+	}
+	
+	/**
+	 * 
+	 * refreshAccessToken:更新内容该. <br/>
+	 * @author Leon Xi
+	 * @param request
+	 * @return
+	 */
+	public static final boolean refreshAccessToken(HttpServletRequest request) {
+		boolean flag = false ;
+		String data = HttpClientUtil.doPost(WECHAT_TOKEN_URL) ;
+		
+		AccessToken accessToken = JsonUtils.jsonToPojo(data, AccessToken.class) ;
+		System.err.println("data->"+accessToken.getAccess_token()+";"+accessToken.getExpires_in());
+		
+		if(!MatchUtil.isEmpty(accessToken)) { //有值
+			SessionUtils.setSessionValue(request, ACCESS_TOKEN, accessToken);
+			flag = true ;
+		} 
+		return flag ;
+	}
+	
+	//--还需要一个调度，定时刷新accessToken--
+	public static void main(String[] args) {
+		String data = HttpClientUtil.doPost(WECHAT_TOKEN_URL) ;
+		
+		AccessToken accessToken = JsonUtils.jsonToPojo(data, AccessToken.class) ;
+		System.err.println("data->"+accessToken.getAccess_token()+";"+accessToken.getExpires_in());
 	}
 }
 
