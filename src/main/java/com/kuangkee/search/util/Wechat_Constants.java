@@ -39,17 +39,17 @@ public class Wechat_Constants {
 	public static final String ACCESS_TOKEN = "access_token" ;
 	
 	//Wechat info
-	public static final String APP_ID = "wx506d706ee08ac22b" ;
-	public static final String APP_SECRET = "b6664acf41e7e5be80cfd2fdcd74de61" ;
+	public static final String APP_ID = "wxa2700dcfca7c6d14" ;
+	public static final String APP_SECRET = "9cbccfb6052a2a7c85051dc7c87b3717" ;
 	
-	public static final String APP_DOMAIN = "" ; //微信设置的域名
+	public static final String APP_DOMAIN = "http://search.wajiyisheng.com" ; //微信设置的域名
 	
 	//Wechat redirect url
 	public static final String WECHAT_CODE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
 			+ APP_ID
 			+ "&redirect_uri="
 			+ APP_DOMAIN
-			+ "/api/login&response_type=code&scope=snsapi_base&state=STATE123#wechat_redirect" ; //获取code
+			+ "/login&response_type=code&scope=snsapi_base&state=STATE123#wechat_redirect" ; //获取code
 	
 	public static final String WECHAT_OPENID_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
 			+ APP_ID
@@ -64,6 +64,12 @@ public class Wechat_Constants {
 			+ APP_SECRET ; //step01:获取token
 	
 	public static final String WECHAT_BATCH_OPENIDS_URL = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" ; //step02:${token}
+	
+	//用户相关前缀
+	public static final String PRE_USER = "USER_" ;
+	
+	//登陆页面-重定向使用
+	public static final String LOGIN_PAGE = "login" ;
 	
 	
 	/**
@@ -131,7 +137,7 @@ public class Wechat_Constants {
 	//--还需要一个调度，定时刷新accessToken--
 	public static void main(String[] args) {
 		String data = HttpClientUtil.doPost(WECHAT_TOKEN_URL) ;
-		
+		System.err.println(data);
 		AccessToken accessToken = JsonUtils.jsonToPojo(data, AccessToken.class) ;
 		System.err.println("data->"+accessToken.getAccess_token()+";"+accessToken.getExpires_in());
 	}
