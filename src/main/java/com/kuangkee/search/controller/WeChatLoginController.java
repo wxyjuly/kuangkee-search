@@ -1,5 +1,8 @@
 package com.kuangkee.search.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -90,10 +93,13 @@ public class WeChatLoginController {
 			log.info("step02: wechat code get error!");
 			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
 		}
-		log.info("2. 通过wechat code获取openId 开始");
+
+log.info("2. 通过wechat code获取openId 开始--start--");
+		String openId = "" ;
 		try {
 			String url =  Wechat_Constants.WECHAT_OPENID_URL+"&code="+code ;
 			String retData = HttpClientUtil.doPost(url) ;
+log.info("2. 通过wechat code获取openId 开始--end--,call:{},return:{}", url, retData);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
@@ -106,6 +112,18 @@ public class WeChatLoginController {
 		String url =  Wechat_Constants.WECHAT_CODE_URL ;
 		String ret = HttpClientUtil.doPost(url) ;
 		log.debug(ret);
+		//批量获取用户http://www.phpos.net/dingyuehao/178.html
+		String url1 =  "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" ;
+		String accessToken = "10_o1lHmAwK2fb0e6g6MvrxOnCMt2HRzaWYXz4umDFkxXScSu4iwZL_HkiMBPdPHhi8z7C9yh4M4tNP24bwCC40DYxKua7rStEQzUDtm3v_W1dkJUjY0L5gfJbj3mLznkJh-EiClDk_oEWwYSiwTFEgAJADPO";
+		Map<String,Object> data = new HashMap<>() ;
+		
+		String ret1 = HttpClientUtil.doPost(url1+accessToken) ;
+		log.debug(ret);
+		
+		
+		
+		
+		
 	}
 	
 }
