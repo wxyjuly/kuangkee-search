@@ -71,6 +71,8 @@ public class Wechat_Constants {
 	//登陆页面-重定向使用
 	public static final String LOGIN_PAGE = "login" ;
 	
+	public static final String INDEX_PAGE = "index.html" ;
+	
 	
 	/**
 	 * 从session中获取用户,不存在走微信

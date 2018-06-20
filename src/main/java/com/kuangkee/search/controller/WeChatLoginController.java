@@ -66,7 +66,6 @@ public class WeChatLoginController {
 			}
 		}
 		
-		
 		return "";
 	}
 	
@@ -84,23 +83,28 @@ public class WeChatLoginController {
 	 * @return
 	 */
 	@RequestMapping(value="/login")
-	public KuangkeeResult login(HttpServletRequest request) {
+	public String login(HttpServletRequest request) {
 		
 		String code = request.getParameter("code") ;
+		String state = request.getParameter("state") ;
+		
+		log.error("===> 登陆获取的参数code:{}, state:{}", code, state);
+		
 		//查询条件不能为空
 		if (StringUtils.isBlank(code)) {
-			return KuangkeeResult.build(KuangKeeResultConst.PARAM_ERROR_CODE, KuangKeeResultConst.INPUT_PARAM_ERROR);
+			log.info("step02: wechat code get error!");
+			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
 		}
-		log.info("登陆成功->"+"");
-		SearchResult<?> searchResult = null;
+		log.info("2. 通过wechat code获取openId 开始");
 		try {
-			String url =  Wechat_Constants.WECHAT_CODE_URL ;
-			String ret = HttpClientUtil.doPost(url) ;
+			String url =  Wechat_Constants.WECHAT_OPENID_URL+"&code="+code ;
+			String retData = HttpClientUtil.doPost(url) ;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return KuangkeeResult.build(KuangKeeResultConst.ERROR_CODE, ExceptionUtil.getStackTrace(e));
+			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
 		}
-		return KuangkeeResult.ok(searchResult);
+		
+		return "redirect:" + Wechat_Constants.INDEX_PAGE ; 
 	}
 	
 	public static void main(String[] args) {
