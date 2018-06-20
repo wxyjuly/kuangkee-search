@@ -8,14 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kuangkee.common.pojo.KuangkeeResult;
-import com.kuangkee.common.utils.SearchResult;
 import com.kuangkee.common.utils.check.MatchUtil;
-import com.kuangkee.common.utils.constant.Constants.KuangKeeResultConst;
-import com.kuangkee.common.utils.exception.ExceptionUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.util.Wechat_Constants;
