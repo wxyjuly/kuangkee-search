@@ -18,8 +18,8 @@ import com.kuangkee.service.IExpertService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:spring/applicationContext-*.xml" })
-public class TestExpertService {
-	private static final Logger log = LoggerFactory.getLogger(TestExpertService.class) ;
+public class ExpertServiceTest {
+	private static final Logger log = LoggerFactory.getLogger(ExpertServiceTest.class) ;
 	
 	@Autowired
 	IExpertService expertService ;

@@ -11,20 +11,16 @@ package com.kuangkee.search.util;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kuangkee.common.pojo.req.UserSearchLogReq;
+import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.constant.Constants;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.json.JsonUtils;
-import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey.Match;
-import com.kuangkee.common.pojo.req.UserSearchLogReq;
-import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
-import com.kuangkee.search.pojo.Account;
 import com.kuangkee.search.pojo.vo.AccessToken;
 import com.kuangkee.search.pojo.vo.UserInfo;
-import com.sun.tools.javah.TypeSignature;
 
 /**
  * ClassName:Wechat_Constants <br/>

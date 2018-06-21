@@ -18,8 +18,8 @@ import com.kuangkee.service.solr.IArticleSearchService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:spring/applicationContext-*.xml" })
-public class TestArticleSearchService {
-	private static final Logger log = LoggerFactory.getLogger(TestArticleSearchService.class) ;
+public class ArticleSearchServiceTest {
+	private static final Logger log = LoggerFactory.getLogger(ArticleSearchServiceTest.class) ;
 	
 	@Autowired
 	IArticleSearchService searchService ;

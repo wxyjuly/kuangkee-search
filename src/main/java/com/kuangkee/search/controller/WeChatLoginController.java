@@ -112,11 +112,12 @@ log.info("2. 通过wechat code获取openId 开始--end--,call:{},return:{}", url
 		String url =  Wechat_Constants.WECHAT_CODE_URL ;
 		String ret = HttpClientUtil.doPost(url) ;
 		log.debug(ret);
-		//批量获取用户http://www.phpos.net/dingyuehao/178.html
+		//批量获取用户-> http://www.phpos.net/dingyuehao/178.html
 		String url1 =  "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" ;
 		String accessToken = "10_o1lHmAwK2fb0e6g6MvrxOnCMt2HRzaWYXz4umDFkxXScSu4iwZL_HkiMBPdPHhi8z7C9yh4M4tNP24bwCC40DYxKua7rStEQzUDtm3v_W1dkJUjY0L5gfJbj3mLznkJh-EiClDk_oEWwYSiwTFEgAJADPO";
-		Map<String,Object> data = new HashMap<>() ;
-		
+		Map<String,Object> user_list = new HashMap<>() ;
+		Map<String,Object> openIds = new HashMap<>() ;
+		openIds.put("openid", "oVF7E1LZRGZpsJpAQHzsEKzDZXYc") ;
 		String ret1 = HttpClientUtil.doPost(url1+accessToken) ;
 		log.debug(ret);
 		
