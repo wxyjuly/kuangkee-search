@@ -1,7 +1,9 @@
 package com.kuangkee.search.controller;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -83,9 +85,8 @@ public class WeChatLoginController {
 	@RequestMapping(value="/login")
 	public String login(HttpServletRequest request) {
 		
-		String code = request.getParameter("code") ;
+        String code = request.getParameter("code") ;
 		String state = request.getParameter("state") ;
-		
 		log.error("===> 登陆获取的参数code:{}, state:{}", code, state);
 		
 		//查询条件不能为空
@@ -94,6 +95,7 @@ public class WeChatLoginController {
 			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
 		}
 
+		//获取用户openId等数据
 log.info("2. 通过wechat code获取openId 开始--start--");
 		String openId = "" ;
 		try {
@@ -104,6 +106,8 @@ log.info("2. 通过wechat code获取openId 开始--end--,call:{},return:{}", url
 			e.printStackTrace();
 			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
 		}
+		
+		
 		
 		return "redirect:" + Wechat_Constants.INDEX_PAGE ; 
 	}
@@ -120,10 +124,6 @@ log.info("2. 通过wechat code获取openId 开始--end--,call:{},return:{}", url
 		openIds.put("openid", "oVF7E1LZRGZpsJpAQHzsEKzDZXYc") ;
 		String ret1 = HttpClientUtil.doPost(url1+accessToken) ;
 		log.debug(ret);
-		
-		
-		
-		
 		
 	}
 	

@@ -47,7 +47,8 @@ public class Wechat_Constants {
 			+ APP_DOMAIN
 			+ "/login&response_type=code&scope=snsapi_base&state=STATE123#wechat_redirect" ; //获取code
 	
-	public static final String WECHAT_OPENID_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
+	public static final String WECHAT_OPENID_URL = 
+			"https://api.weixin.qq.com/sns/oauth2/access_token?appid="
 			+ APP_ID
 			+ "&secret="
 			+ APP_SECRET
@@ -57,7 +58,12 @@ public class Wechat_Constants {
 			+ "&appid="
 			+ APP_ID
 			+ "&secret="
-			+ APP_SECRET ; //step01:获取token
+			+ APP_SECRET ; //step01:获取access_token,2小时有效;
+	
+	
+	public static final String WECHAT_USERINFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?" ; //access_token=Xxx&openid=oAmV1tw7iUbDt0px_z0NBLy164Dg:"
+	
+	
 	
 	public static final String WECHAT_BATCH_OPENIDS_URL = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" ; //step02:${token}
 	
@@ -68,7 +74,6 @@ public class Wechat_Constants {
 	public static final String LOGIN_PAGE = "login" ;
 	
 	public static final String INDEX_PAGE = "index.html" ;
-	
 	
 	/**
 	 * 从session中获取用户,不存在走微信

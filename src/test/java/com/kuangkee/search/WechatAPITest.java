@@ -72,6 +72,7 @@ public class WechatAPITest {
 	 * testGetUserInfoByByBatchOpenIds:通过openId批量获取用户信息. <br/>
 	 * @author Leon Xi
 	 * @throws Exception 
+	 * oVF7E1LZRGZpsJpAQHzsEKzDZXYc
 	 */
 	@Test
 	public void testGetUserInfoByByBatchOpenIds() throws Exception {
@@ -93,19 +94,18 @@ public class WechatAPITest {
 		log.info(data);
 	}
 	
-	
 	public static void main(String[] args) {
 		
 //		String json = "" ;
 //		Map<String,Object> user_list = new HashMap<>() ;
-//		//set 1
+		//set 1
 //		List<Object> openIds = new ArrayList<>() ;
 //		UserOpenIdReq openIdReq = new UserOpenIdReq() ;
 //		openIdReq.setOpenid("oVF7E1LZRGZpsJpAQHzsEKzDZXYc");
 //		openIdReq.setLang("zh-CN");
 //		openIds.add(openIdReq) ;
 //		user_list.put("user_list", openIds) ;
-//		
+		
 //		json = JsonUtils.objectToJson(user_list) ;
 
 		String json = "" ;
