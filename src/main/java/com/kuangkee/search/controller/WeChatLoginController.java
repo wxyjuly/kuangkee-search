@@ -1,9 +1,7 @@
 package com.kuangkee.search.controller;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kuangkee.common.pojo.common.wechat.Wechat_Constants;
 import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
-import com.kuangkee.search.util.Wechat_Constants;
 import com.kuangkee.service.IUserSearchLogService;
 
 /**

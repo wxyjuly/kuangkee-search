@@ -1,9 +1,7 @@
 package com.kuangkee.search ;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -14,12 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.alibaba.druid.support.json.JSONUtils;
+import com.kuangkee.common.pojo.common.wechat.AccessTokenInfo;
+import com.kuangkee.common.pojo.common.wechat.WechatUserInfo;
+import com.kuangkee.common.pojo.common.wechat.Wechat_Constants;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.json.JsonUtils;
-import com.kuangkee.search.pojo.vo.AccessToken;
-import com.kuangkee.search.pojo.vo.UserOpenIdReq;
-import com.kuangkee.search.util.Wechat_Constants;
 import com.kuangkee.service.IExpertService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -40,7 +37,7 @@ public class WechatAPITest {
 		String accessTokenURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa2700dcfca7c6d14&secret=9cbccfb6052a2a7c85051dc7c87b3717" ;
 		String data = HttpClientUtil.doPost(accessTokenURL) ;
 		log.info(data);
-		AccessToken accessToken = JsonUtils.jsonToPojo(data, AccessToken.class) ;
+		AccessTokenInfo accessToken = JsonUtils.jsonToPojo(data, AccessTokenInfo.class) ;
 		log.info("AccessToken-data->{};{}", accessToken.getAccess_token() , accessToken.getExpires_in());
 	}
 	
@@ -66,6 +63,27 @@ public class WechatAPITest {
 		String openIdURL = Wechat_Constants.WECHAT_OPENID_URL + "&code=" + code ;
 		String data = HttpClientUtil.doPost(openIdURL) ;
 		log.info(data);
+	}
+	
+	
+	/**
+	 * testGetUserDetailInfo:通过access_token,openId获取用户基本信息 . <br/>
+	 * @author Leon Xi
+	 * @throws Exception 
+	 */
+	@Test
+	public void testGetUserDetailInfo() throws Exception {
+		String accessToken = "" ;
+		String openId = "" ;
+		String openIdURL = Wechat_Constants.WECHAT_USERINFO_URL  
+						 + "&access_token=" + accessToken 
+				         + "&openid=" + openId ;
+		String data = HttpClientUtil.doPost(openIdURL) ;
+		log.info(data) ;
+		
+		WechatUserInfo userInfo = JsonUtils.jsonToPojo(data, WechatUserInfo.class) ;
+		
+		
 	}
 	
 	/**
