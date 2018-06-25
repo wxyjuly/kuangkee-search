@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey.Match;
+import com.kuangkee.common.pojo.common.wechat.WechatOpenId;
+import com.kuangkee.common.pojo.common.wechat.WechatUserInfo;
 import com.kuangkee.common.pojo.common.wechat.Wechat_Constants;
 import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
+import com.kuangkee.search.pojo.Account;
 import com.kuangkee.service.IUserSearchLogService;
+import com.kuangkee.service.wechat.IWechatService;
 
 /**
  * 微信登陆Controller
@@ -33,6 +38,9 @@ public class WeChatLoginController {
 	
 	@Autowired
 	private IUserSearchLogService userSearchLogService ;
+	
+	@Autowired
+	private IWechatService wechatService ;
 	
 	/**
 	 * index:搜索页面-微信登陆. <br/>
@@ -75,6 +83,22 @@ public class WeChatLoginController {
 			https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 	   3 第三步：刷新access_token（如果需要）
 	   4 第四步：拉取用户信息(需scope为 snsapi_userinfo)
+	   
+------------------------------------------------------------------------------	   
+	1. 获取code
+	2. 通过code获取openId.
+	3. 通过openId查询数据库，是否存在用户数据?
+		3.1  存在，看是否包含手机号码？
+			3.1.1  不包含,跳转到登陆页面5
+			3.1.2 包含，跳转到6
+		3.2 不存在，跳转到4
+	4. 通过access_token,openId获取用户基本数据
+		4.1	获取成功，保存用户基本数据，跳转到手机号录入页面5。
+		4.2	获取失败，刷新access_token，若出错提示.
+	5. 手机登陆页面录入到手机号码。
+	6. 搜索页面首页			
+-----------------------------------------------------------------------------
+	
 	 * @see https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842
 	 * @author Leon Xi
 	 * @param request
@@ -93,22 +117,53 @@ public class WeChatLoginController {
 			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
 		}
 
-		//获取用户openId等数据
-log.info("2. 通过wechat code获取openId 开始--start--");
-		String openId = "" ;
-		try {
-			String url =  Wechat_Constants.WECHAT_OPENID_URL+"&code="+code ;
-			String retData = HttpClientUtil.doPost(url) ;
-log.info("2. 通过wechat code获取openId 开始--end--,call:{},return:{}", url, retData);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "redirect:" + Wechat_Constants.LOGIN_PAGE ; 
+		WechatOpenId wechatOpenId = wechatService.getUserOpenId(code) ;
+		
+		String openId = wechatOpenId.getOpenId() ;
+		
+		if(MatchUtil.isEmpty(openId)) {
+			return "获取openId出错..." ; 
 		}
 		
+		//qryUserInfoByOpenId
 		
+		Account account = null ; //qry from DB  :TODO
 		
-		return "redirect:" + Wechat_Constants.INDEX_PAGE ; 
+		if(MatchUtil.isEmpty(account)) { //DB中没有，从接口中获取
+			String accessToken = "" ; //session中获取 :TODO
+			WechatUserInfo userInfo = wechatService.getUserInfo(openId, accessToken) ;
+			if(MatchUtil.isEmpty(userInfo)) {
+				log.info("通过接口获取用户信息失败...");
+				//throw Error to inteface 
+				return "获取用户数据出错，请稍后再试..." ;
+			} else {
+				//save to session :TODO
+				//save to DB :TODO
+			}
+			return "redirect:"+ "savePhonePage";  // :TODO 跳转到手机号码录入页面
+		} else {  
+			String userPhoneNo = account.getPhone() ;
+			if(MatchUtil.isEmpty(userPhoneNo)) {  //DB中有数据，但手机号码为空
+				return "redirect:"+ "savePhonePage";  // :TODO 跳转到手机号码录入页面
+			}
+		}
+		return "redirect:" + Wechat_Constants.INDEX_PAGE ;  //:TODO 跳转到搜索首页，带参数Token
 	}
+	
+	/**
+	 * savePhoneNo:保存手机号码，并重定向到搜索页面. <br/>
+	 * @author Leon Xi
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/phone")
+	public String savePhoneNo(HttpServletRequest request) {
+		
+		//save DB: TODO
+		//update session :TODO
+		return "redirect:" + Wechat_Constants.INDEX_PAGE ;  // and Token :TODO
+	}
+	
 	
 	public static void main(String[] args) {
 		String url =  Wechat_Constants.WECHAT_CODE_URL ;
