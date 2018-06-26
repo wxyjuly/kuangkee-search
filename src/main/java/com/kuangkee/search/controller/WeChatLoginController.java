@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -166,10 +167,22 @@ public class WeChatLoginController {
 	 * @return
 	 */
 	@RequestMapping(value="/phone")
-	public String savePhoneNo(HttpServletRequest request) {
+	public String savePhoneNo(HttpServletRequest request, 
+			@Param("phoneNo") String phoneNo,
+			@Param("token") String token) {
 		
-		//save DB: TODO
+		if(MatchUtil.isEmpty(phoneNo) || MatchUtil.isEmpty(token)) {
+			return null ;
+		}
+		
+		Account accountReq = new Account() ;
+		accountReq.setPhone(phoneNo);
+		// get userInfo from session
 		//update session :TODO
+		//save DB
+		boolean flag = accountService.saveAccountInfo(accountReq) ;
+		log.info("用户手机号保存:{}",flag) ;
+		
 		return "redirect:" + Wechat_Constants.INDEX_PAGE ;  // and Token :TODO
 	}
 	
