@@ -83,7 +83,6 @@ public class WechatAPITest {
 		
 		WechatUserInfo userInfo = JsonUtils.jsonToPojo(data, WechatUserInfo.class) ;
 		
-		
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.pojo.Account;
+import com.kuangkee.service.IAccountService;
 import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.wechat.IWechatService;
 
@@ -37,7 +39,7 @@ public class WeChatLoginController {
 	private static final Logger log = LoggerFactory.getLogger(WeChatLoginController.class) ;
 	
 	@Autowired
-	private IUserSearchLogService userSearchLogService ;
+	private IAccountService accountService ;
 	
 	@Autowired
 	private IWechatService wechatService ;
@@ -126,8 +128,9 @@ public class WeChatLoginController {
 		}
 		
 		//qryUserInfoByOpenId
-		
-		Account account = null ; //qry from DB  :TODO
+		Account accountReq = new Account() ;
+		accountReq.setOpenid(openId ) ;
+		Account account = accountService.getAccountByAccountInfo(accountReq) ; //qry from DB  :TODO
 		
 		if(MatchUtil.isEmpty(account)) { //DB中没有，从接口中获取
 			String accessToken = "" ; //session中获取 :TODO
@@ -138,7 +141,13 @@ public class WeChatLoginController {
 				return "获取用户数据出错，请稍后再试..." ;
 			} else {
 				//save to session :TODO
+				
 				//save to DB :TODO
+				accountReq = new Account() ;
+				BeanUtils.copyProperties(userInfo, accountReq) ;
+				log.error("from Bean[userInfo]{}, to Bean[userInfo]{}", userInfo.toString(), accountReq.toString());
+				boolean flag = accountService.saveAccountInfo(account) ;
+				log.info("用户信息保存:{}",flag) ; 
 			}
 			return "redirect:"+ "savePhonePage";  // :TODO 跳转到手机号码录入页面
 		} else {  
@@ -163,7 +172,6 @@ public class WeChatLoginController {
 		//update session :TODO
 		return "redirect:" + Wechat_Constants.INDEX_PAGE ;  // and Token :TODO
 	}
-	
 	
 	public static void main(String[] args) {
 		String url =  Wechat_Constants.WECHAT_CODE_URL ;
