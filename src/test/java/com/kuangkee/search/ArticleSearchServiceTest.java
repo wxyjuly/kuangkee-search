@@ -32,7 +32,7 @@ public class ArticleSearchServiceTest {
 	 * @author Leon Xi
 	 * @throws Exception 
 	 */
-	@Test
+//	@Test
 	public void testSearchSolr() throws Exception {
 		String qryStr = "测试" ;
 		int page = 1 ;
@@ -43,7 +43,7 @@ public class ArticleSearchServiceTest {
 		System.err.println(result.getResult());
 	}
 	
-	@Test
+//	@Test
 	public void testSearchArticleListFromDBByPage() throws Exception {
 		String errorCode = "E" ;
 		int page = 1 ;
@@ -60,7 +60,7 @@ public class ArticleSearchServiceTest {
 	 * @author Leon Xi
 	 * @throws Exception
 	 */
-	@Test
+//	@Test
 	public void testQryBrandCartByPart() throws Exception {
 		String mid = "36" ;
 		String cid = "95" ;

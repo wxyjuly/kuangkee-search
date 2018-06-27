@@ -137,14 +137,5 @@ public class WechatAPITest {
 		System.err.println(json);
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

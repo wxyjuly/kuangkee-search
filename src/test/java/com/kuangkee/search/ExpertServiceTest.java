@@ -29,7 +29,7 @@ public class ExpertServiceTest {
 	 * @author Leon Xi
 	 * @throws Exception 
 	 */
-	@Test
+//	@Test
 	public void testQryExpertByPage() throws Exception {
 		int page = 1 ;
 		int rows = 20 ;
@@ -51,7 +51,7 @@ public class ExpertServiceTest {
 	 * @author Leon Xi
 	 * @throws Exception 
 	 */
-	@Test
+//	@Test
 	public void testQryExpertExt() throws Exception {
 		int page = 1 ;
 		int rows = 20 ;
