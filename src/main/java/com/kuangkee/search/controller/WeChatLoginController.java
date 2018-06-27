@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -211,6 +212,7 @@ public class WeChatLoginController {
 	
 	@RequestMapping(value="/testRedirect")
 	public String testRedirect(HttpServletRequest request, 
+			HttpServletResponse response,
 			@Param("phoneNo") String phoneNo,
 			@Param("token") String token) {
 		
