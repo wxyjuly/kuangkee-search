@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey.Match;
 import com.kuangkee.common.pojo.common.wechat.WechatOpenId;
 import com.kuangkee.common.pojo.common.wechat.WechatUserInfo;
 import com.kuangkee.common.pojo.common.wechat.Wechat_Constants;
@@ -23,8 +22,8 @@ import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.pojo.Account;
+import com.kuangkee.search.util.AccountSession;
 import com.kuangkee.service.IAccountService;
-import com.kuangkee.service.IUserSearchLogService;
 import com.kuangkee.service.wechat.IWechatService;
 
 /**
@@ -60,11 +59,12 @@ public class WeChatLoginController {
 			log.info("user token is null!");
 			return "redirect:"+Wechat_Constants.LOGIN_PAGE ; 
 		}
-		Object sessionObj = SessionUtils.getSessionValue(request, Wechat_Constants.PRE_USER+token) ;
+		Object sessionObj = SessionUtils.getSessionValue(request, token) ;
 		//step01: session获取token对应的用户信息
 		if(!MatchUtil.isEmpty(sessionObj)) {  //已登录，从定向到搜索页面
+			return "redirect:" + Wechat_Constants.INDEX_PAGE + "?token=" + token ;
 			
-		} else { //未登陆，从微信拉取用户信息
+		} else { //未登陆，页面跳转，从微信拉取用户信息从定向到页面
 			try {
 				String url =  Wechat_Constants.WECHAT_CODE_URL ;
 				String ret = HttpClientUtil.doPost(url) ;
@@ -75,7 +75,7 @@ public class WeChatLoginController {
 			}
 		}
 		
-		return "";
+		return "" ;
 	}
 	
 	/**
@@ -114,6 +114,7 @@ public class WeChatLoginController {
 		String state = request.getParameter("state") ;
 		log.error("===> 登陆获取的参数code:{}, state:{}", code, state);
 		
+		String token = null ;
 		//查询条件不能为空
 		if (StringUtils.isBlank(code)) {
 			log.info("step02: wechat code get error!");
@@ -121,43 +122,50 @@ public class WeChatLoginController {
 		}
 
 		WechatOpenId wechatOpenId = wechatService.getUserOpenId(code) ;
-		
 		String openId = wechatOpenId.getOpenId() ;
 		
 		if(MatchUtil.isEmpty(openId)) {
 			return "获取openId出错..." ; 
 		}
 		
+		token = openId ; //获取用户token
+		
 		//qryUserInfoByOpenId
 		Account accountReq = new Account() ;
-		accountReq.setOpenid(openId ) ;
+		accountReq.setOpenid(openId) ;
 		Account account = accountService.getAccountByAccountInfo(accountReq) ; //qry from DB  :TODO
+		log.info("account:{}", account) ;
 		
 		if(MatchUtil.isEmpty(account)) { //DB中没有，从接口中获取
-			String accessToken = "" ; //session中获取 :TODO
+			String accessToken = (String) AccountSession.getSessionData(request, Wechat_Constants.ACCESS_TOKEN) ; //session中获取
+			
 			WechatUserInfo userInfo = wechatService.getUserInfo(openId, accessToken) ;
+			
 			if(MatchUtil.isEmpty(userInfo)) {
 				log.info("通过接口获取用户信息失败...");
 				//throw Error to inteface 
 				return "获取用户数据出错，请稍后再试..." ;
 			} else {
-				//save to session :TODO
-				
-				//save to DB :TODO
+				//save to DB 
 				accountReq = new Account() ;
 				BeanUtils.copyProperties(userInfo, accountReq) ;
 				log.error("from Bean[userInfo]{}, to Bean[userInfo]{}", userInfo.toString(), accountReq.toString());
 				boolean flag = accountService.saveAccountInfo(account) ;
 				log.info("用户信息保存:{}",flag) ; 
+				
+				//save to session
+				AccountSession.setSessionData(request, openId, accountReq);
+				
 			}
-			return "redirect:"+ "savePhonePage";  // :TODO 跳转到手机号码录入页面
+			return "redirect:"+ "savePhonePage" + "?token=" + token ;   // :TODO 跳转到手机号码录入页面
+			
 		} else {  
 			String userPhoneNo = account.getPhone() ;
 			if(MatchUtil.isEmpty(userPhoneNo)) {  //DB中有数据，但手机号码为空
 				return "redirect:"+ "savePhonePage";  // :TODO 跳转到手机号码录入页面
 			}
 		}
-		return "redirect:" + Wechat_Constants.INDEX_PAGE ;  //:TODO 跳转到搜索首页，带参数Token
+		return "redirect:" + Wechat_Constants.INDEX_PAGE + "?token=" + token ;  //:TODO 跳转到搜索首页，带参数Token
 	}
 	
 	/**
@@ -169,22 +177,46 @@ public class WeChatLoginController {
 	@RequestMapping(value="/phone")
 	public String savePhoneNo(HttpServletRequest request, 
 			@Param("phoneNo") String phoneNo,
-			@Param("token") String token) {
+			@Param("token") String token,
+			@Param("lat") String lat,
+			@Param("lng") String lng) {
 		
 		if(MatchUtil.isEmpty(phoneNo) || MatchUtil.isEmpty(token)) {
 			return null ;
 		}
 		
-		Account accountReq = new Account() ;
-		accountReq.setPhone(phoneNo);
-		// get userInfo from session
-		//update session :TODO
+		//get userInfo from session
+		Account accountReq = (Account) SessionUtils.getSessionValue(request, token) ;
+		if(MatchUtil.isEmpty(accountReq)) {
+			return null ;
+		}
+		
+		if(MatchUtil.isEmpty(lat)) {
+			accountReq.setLat(lat) ;
+		}
+		if(MatchUtil.isEmpty(lng)) {
+			accountReq.setLng(lng) ;
+		}
+		
+		accountReq.setPhone(phoneNo) ;
+		
+		//update session 
+		SessionUtils.setSessionValue(request, token, accountReq) ;
 		//save DB
 		boolean flag = accountService.saveAccountInfo(accountReq) ;
 		log.info("用户手机号保存:{}",flag) ;
 		
-		return "redirect:" + Wechat_Constants.INDEX_PAGE ;  // and Token :TODO
+		return "redirect:" + Wechat_Constants.INDEX_PAGE + "?token=" + token ;  // and Token :TODO
 	}
+	
+	@RequestMapping(value="/testRedirect")
+	public String testRedirect(HttpServletRequest request, 
+			@Param("phoneNo") String phoneNo,
+			@Param("token") String token) {
+		
+		return "redirect:" + Wechat_Constants.INDEX_PAGE + "?token=" + token ;  // and Token 
+	}
+	
 	
 	public static void main(String[] args) {
 		String url =  Wechat_Constants.WECHAT_CODE_URL ;
