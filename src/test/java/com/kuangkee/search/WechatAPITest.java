@@ -34,7 +34,7 @@ public class WechatAPITest {
 	 */
 	@Test
 	public void testGetAccessToken() throws Exception {
-		String accessTokenURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa2700dcfca7c6d14&secret=9cbccfb6052a2a7c85051dc7c87b3717" ;
+		String accessTokenURL = Wechat_Constants.WECHAT_TOKEN_URL ;
 		String data = HttpClientUtil.doPost(accessTokenURL) ;
 		log.info(data);
 		AccessTokenInfo accessToken = JsonUtils.jsonToPojo(data, AccessTokenInfo.class) ;

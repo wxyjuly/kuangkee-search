@@ -23,7 +23,6 @@ import com.kuangkee.common.utils.check.MatchUtil;
 import com.kuangkee.common.utils.httpclient.HttpClientUtil;
 import com.kuangkee.common.utils.session.SessionUtils;
 import com.kuangkee.search.pojo.Account;
-import com.kuangkee.search.util.AccountSession;
 import com.kuangkee.service.IAccountService;
 import com.kuangkee.service.wechat.IWechatService;
 
@@ -60,9 +59,9 @@ public class WeChatLoginController {
 			log.info("user token is null!");
 			return "redirect:"+Wechat_Constants.LOGIN_PAGE ; 
 		}
-		Object sessionObj = SessionUtils.getSessionValue(request, token) ;
+		String openId = wechatService.getAccessToken(token) ;
 		//step01: session获取token对应的用户信息
-		if(!MatchUtil.isEmpty(sessionObj)) {  //已登录，从定向到搜索页面
+		if(!MatchUtil.isEmpty(openId)) {  //已登录，从定向到搜索页面
 			return "redirect:" + Wechat_Constants.INDEX_PAGE + "?token=" + token ;
 			
 		} else { //未登陆，页面跳转，从微信拉取用户信息从定向到页面
@@ -138,7 +137,7 @@ public class WeChatLoginController {
 		log.info("account:{}", account) ;
 		
 		if(MatchUtil.isEmpty(account)) { //DB中没有，从接口中获取
-			String accessToken = (String) AccountSession.getSessionData(request, Wechat_Constants.ACCESS_TOKEN) ; //session中获取
+			String accessToken = wechatService.getAccessToken(Wechat_Constants.ACCESS_TOKEN) ; //session中获取
 			
 			WechatUserInfo userInfo = wechatService.getUserInfo(openId, accessToken) ;
 			
@@ -147,15 +146,15 @@ public class WeChatLoginController {
 				//throw Error to inteface 
 				return "获取用户数据出错，请稍后再试..." ;
 			} else {
+				//save user Info and refresh Redis
+				
 				//save to DB 
 				accountReq = new Account() ;
 				BeanUtils.copyProperties(userInfo, accountReq) ;
 				log.error("from Bean[userInfo]{}, to Bean[userInfo]{}", userInfo.toString(), accountReq.toString());
-				boolean flag = accountService.saveAccountInfo(account) ;
-				log.info("用户信息保存:{}",flag) ; 
 				
-				//save to session
-				AccountSession.setSessionData(request, openId, accountReq);
+				boolean flag = accountService.saveAccountInfoAndRefreshCache(token, account) ;
+				log.info("用户信息保存:{}",flag) ; 
 				
 			}
 			return "redirect:"+ "savePhonePage" + "?token=" + token ;   // :TODO 跳转到手机号码录入页面
