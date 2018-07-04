@@ -3,8 +3,6 @@ package com.kuangkee.search.quatz ;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.kuangkee.common.utils.session.SessionUtils;
-import com.kuangkee.search.util.WechatUtil;
 import com.kuangkee.service.wechat.IWechatService;
 
 /**
@@ -41,12 +37,13 @@ public class SpringQuatz{
     public void reportCurrentByCron(){
         System.out.println ("Scheduling Tasks Examples By Cron each 10 mins: The time is now " + dateFormat ().format (new Date ()));
     }
-
     /**
      * 每小时刷新access_token
      */
-    @Scheduled(cron = "0 * */1  * * * ")
+    @Scheduled(cron = "0 */1 *  * * * ")
     public void refreshByCronByHours() {
+    	System.out.println ("Scheduling Tasks Examples By Cron each 10 mins: The time is now " + dateFormat ().format (new Date ()));
+    	LOG.info ("Scheduling Tasks Examples By Cron each 10 mins: The time is now " + dateFormat ().format (new Date ()));
     	wechatService.genetateAccessToken() ;
     }
     

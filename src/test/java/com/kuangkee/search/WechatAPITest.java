@@ -110,6 +110,28 @@ public class WechatAPITest {
 		String data = HttpClientUtil.doPostJson(batchUserInfoURL, json) ;
 		log.info(data);
 	}
+	/**
+	 * testRedirectFromHttpClient:测试用户数据. <br/>
+	 * @author Leon Xi
+	 * @throws Exception 
+	 * oVF7E1LZRGZpsJpAQHzsEKzDZXYc
+	 */
+	@Test
+	public void testRedirectFromHttpClient() throws Exception {
+		
+		String accessToken = "oVF7E1LZRGZpsJpAQHzsEKzDZXYc" ; 
+		String batchUserInfoURL = "http://127.0.0.1:8080/kuangkee-search/testRedirect" ;
+		
+		String json = "" ;
+		//set 1
+		Map<String,Object> openIds = new HashMap<>() ;
+		openIds.put("token", accessToken) ;
+		json = JsonUtils.objectToJson(openIds) ;
+		log.error("Json:{}", json);
+		
+		String data = HttpClientUtil.doPostJson(batchUserInfoURL, json) ;
+		log.error("========result======"+data);
+	}
 	
 	public static void main(String[] args) {
 		
